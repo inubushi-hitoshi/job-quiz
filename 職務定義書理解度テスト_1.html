@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>職務定義書 理解度テスト｜T&T Design R&D team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#14213D;
+    --navy-2:#1F2E52;
+    --slate:#5B6478;
+    --slate-light:#8890A0;
+    --amber:#C68A2E;
+    --amber-light:#E9C888;
+    --green:#2F7D5C;
+    --green-bg:#E7F3EC;
+    --red:#B3452F;
+    --red-bg:#FBEAE5;
+    --bg:#F3F1EC;
+    --paper:#FFFFFF;
+    --line:#E1DFD7;
+    --line-strong:#C9C6BA;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 8%, rgba(20,33,61,0.05), transparent 40%),
+      radial-gradient(circle at 85% 92%, rgba(198,138,46,0.06), transparent 45%);
+    font-family:'Inter', sans-serif;
+    color:var(--navy);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:40px 16px 64px;
+    line-height:1.6;
+  }
+
+  .doc{
+    width:100%;
+    max-width:720px;
+  }
+
+  .letterhead{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding-bottom:18px;
+    margin-bottom:28px;
+    border-bottom:2px solid var(--navy);
+  }
+  .letterhead .mark{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    color:var(--slate);
+    text-transform:uppercase;
+  }
+  .letterhead .rev{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--slate-light);
+    border:1px solid var(--line-strong);
+    padding:3px 8px;
+    border-radius:3px;
+  }
+
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:2px;
+    box-shadow:0 1px 2px rgba(20,33,61,0.04), 0 12px 32px -20px rgba(20,33,61,0.25);
+    padding:44px 40px;
+    position:relative;
+  }
+  .card::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:4px;
+    background:linear-gradient(180deg, var(--navy), var(--amber));
+  }
+
+  h1{
+    font-family:'Zilla Slab', serif;
+    font-weight:700;
+    font-size:28px;
+    margin:0 0 6px;
+    color:var(--navy);
+    letter-spacing:0.01em;
+  }
+  .subtitle{
+    font-size:14px;
+    color:var(--slate);
+    margin:0 0 28px;
+  }
+
+  label.field-label{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--slate);
+    margin-bottom:8px;
+  }
+
+  input[type="text"]{
+    width:100%;
+    padding:12px 14px;
+    font-family:'Inter', sans-serif;
+    font-size:15px;
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    background:#FCFBF9;
+    color:var(--navy);
+    margin-bottom:24px;
+  }
+  input[type="text"]:focus{
+    outline:2px solid var(--amber);
+    outline-offset:1px;
+    border-color:var(--amber);
+  }
+
+  .role-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin-bottom:28px;
+  }
+  @media (max-width:520px){ .role-grid{grid-template-columns:1fr;} }
+
+  .role-option{
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    padding:12px 14px;
+    cursor:pointer;
+    background:#FCFBF9;
+    transition:border-color .15s, background .15s;
+    position:relative;
+  }
+  .role-option input{position:absolute; opacity:0; pointer-events:none;}
+  .role-option .r-name{
+    font-weight:600;
+    font-size:14px;
+    color:var(--navy);
+  }
+  .role-option .r-desc{
+    font-size:12px;
+    color:var(--slate);
+    margin-top:2px;
+  }
+  .role-option.selected{
+    border-color:var(--navy);
+    background:#EFF1F6;
+  }
+  .role-option.selected::after{
+    content:"✓";
+    position:absolute;
+    top:10px; right:12px;
+    color:var(--navy);
+    font-weight:700;
+  }
+
+  button.primary{
+    width:100%;
+    padding:14px 18px;
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    color:#fff;
+    background:var(--navy);
+    border:none;
+    border-radius:3px;
+    cursor:pointer;
+    letter-spacing:0.01em;
+    transition:background .15s;
+  }
+  button.primary:hover:not(:disabled){background:var(--navy-2);}
+  button.primary:disabled{background:var(--slate-light); cursor:not-allowed;}
+
+  button.secondary{
+    width:100%;
+    padding:12px 18px;
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    color:var(--navy);
+    background:transparent;
+    border:1px solid var(--navy);
+    border-radius:3px;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  button.secondary:hover{background:#EFF1F6;}
+
+  .error-msg{
+    font-size:13px;
+    color:var(--red);
+    margin:-16px 0 20px;
+    display:none;
+  }
+
+  /* Quiz screen */
+  .progress-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .progress-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--slate);
+  }
+  .progress-track{
+    height:6px;
+    background:var(--line);
+    border-radius:3px;
+    overflow:hidden;
+    margin-bottom:28px;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--navy), var(--amber));
+    border-radius:3px;
+    transition:width .3s ease;
+  }
+
+  .tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    color:var(--amber);
+    border:1px solid var(--amber-light);
+    background:#FCF6EA;
+    padding:3px 9px;
+    border-radius:2px;
+    margin-bottom:14px;
+  }
+
+  .question-text{
+    font-family:'Zilla Slab', serif;
+    font-size:19px;
+    font-weight:600;
+    color:var(--navy);
+    margin:0 0 20px;
+    line-height:1.55;
+  }
+
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom:26px;
+  }
+  .option{
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    padding:13px 16px;
+    cursor:pointer;
+    background:#FCFBF9;
+    font-size:14.5px;
+    color:var(--navy);
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    transition:border-color .15s, background .15s;
+  }
+  .option:hover{border-color:var(--slate-light);}
+  .option .letter{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    color:var(--slate);
+    flex-shrink:0;
+  }
+  .option.selected{
+    border-color:var(--navy);
+    background:#EFF1F6;
+  }
+  .option.selected .letter{color:var(--navy);}
+
+  /* Result screen */
+  .score-block{
+    text-align:center;
+    padding:20px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:26px;
+  }
+  .score-number{
+    font-family:'Zilla Slab', serif;
+    font-size:56px;
+    font-weight:700;
+    color:var(--navy);
+    line-height:1;
+  }
+  .score-number span{font-size:26px; color:var(--slate);}
+  .score-caption{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--slate);
+    margin-top:8px;
+  }
+  .score-tier{
+    display:inline-block;
+    margin-top:14px;
+    padding:6px 16px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+  }
+  .tier-pass{background:var(--green-bg); color:var(--green);}
+  .tier-review{background:var(--red-bg); color:var(--red);}
+
+  .review-item{
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:16px 18px;
+    margin-bottom:12px;
+  }
+  .review-item .rq{
+    font-size:14px;
+    font-weight:600;
+    color:var(--navy);
+    margin-bottom:8px;
+  }
+  .review-row{
+    font-size:13px;
+    display:flex;
+    gap:8px;
+    margin-bottom:4px;
+  }
+  .review-row .rl{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--slate);
+    min-width:64px;
+    padding-top:1px;
+  }
+  .badge-correct{color:var(--green); font-weight:600;}
+  .badge-wrong{color:var(--red); font-weight:600;}
+
+  .actions-row{
+    display:flex;
+    gap:10px;
+    margin-top:28px;
+  }
+  .actions-row button{flex:1; margin-top:0;}
+
+  .footnote{
+    text-align:center;
+    font-size:12px;
+    color:var(--slate-light);
+    margin-top:22px;
+  }
+
+  .mail-panel{
+    margin-top:22px;
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    background:#FCFBF9;
+    padding:18px 18px 20px;
+  }
+  .mail-panel .mp-title{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--slate);
+    margin-bottom:10px;
+  }
+  .mail-panel label.field-label{margin-bottom:4px;}
+  .mail-panel input[type="text"]{margin-bottom:14px; font-size:13px; padding:9px 11px;}
+  .mail-panel textarea{
+    width:100%;
+    min-height:220px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    line-height:1.6;
+    color:var(--navy);
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    background:#fff;
+    padding:12px 13px;
+    resize:vertical;
+    margin-bottom:14px;
+  }
+  .mail-panel .mp-actions{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .mail-panel .mp-actions button{
+    flex:1;
+    min-width:150px;
+    margin-top:0;
+    padding:11px 14px;
+    font-size:13.5px;
+  }
+  .copy-msg{
+    font-size:12px;
+    color:var(--green);
+    margin-top:8px;
+    display:none;
+  }
+
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div class="doc">
+  <div class="letterhead">
+    <span class="mark">T&amp;T Design R&amp;D Team — 職務定義書</span>
+    <span class="rev">Ver.1.2 準拠</span>
+  </div>
+
+  <div class="card">
+
+    <!-- SCREEN 1: START -->
+    <div id="screen-start">
+      <h1>職務定義書 理解度テスト</h1>
+      <p class="subtitle">自分の氏名と職種を入力し、テストを開始してください。設問は選択した職種に応じて出題されます（全8問）。</p>
+
+      <label class="field-label" for="input-name">氏名</label>
+      <input type="text" id="input-name" placeholder="例）山田 太郎">
+      <div class="error-msg" id="error-name">氏名を入力してください。</div>
+
+      <label class="field-label">職種を選択</label>
+      <div class="role-grid" id="role-grid"></div>
+      <div class="error-msg" id="error-role">職種を選択してください。</div>
+
+      <button class="primary" id="btn-start">テストを開始する</button>
+    </div>
+
+    <!-- SCREEN 2: QUIZ -->
+    <div id="screen-quiz" class="hidden">
+      <div class="progress-row">
+        <span class="progress-label" id="progress-label">Q1 / 8</span>
+        <span class="progress-label" id="progress-role"></span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+      <div class="tag" id="q-tag">カテゴリ</div>
+      <p class="question-text" id="q-text"></p>
+      <div class="options" id="q-options"></div>
+
+      <button class="primary" id="btn-next" disabled>次へ</button>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="screen-result" class="hidden">
+      <h1>受験結果</h1>
+      <div class="score-block">
+        <div class="score-number" id="score-number">0<span>/8</span></div>
+        <div class="score-caption" id="score-percent">正答率 0%</div>
+        <div id="score-tier"></div>
+      </div>
+
+      <div id="review-list"></div>
+
+      <div class="actions-row">
+        <button class="secondary" id="btn-retry">もう一度受験する</button>
+        <button class="primary" id="btn-mail">結果をチームリーダーへ報告する</button>
+      </div>
+
+      <div class="mail-panel hidden" id="mail-panel">
+        <div class="mp-title">報告メールの下書き</div>
+        <label class="field-label" for="mp-to">宛先</label>
+        <input type="text" id="mp-to" readonly>
+        <label class="field-label" for="mp-subject">件名</label>
+        <input type="text" id="mp-subject" readonly>
+        <label class="field-label" for="mp-body">本文</label>
+        <textarea id="mp-body" readonly></textarea>
+        <div class="mp-actions">
+          <button class="primary" id="btn-open-mail">メールソフトで開く</button>
+          <button class="secondary" id="btn-copy-body">本文をコピー</button>
+        </div>
+        <div class="copy-msg" id="copy-msg">コピーしました。メールソフトに貼り付けて送信してください。</div>
+      </div>
+
+      <p class="footnote">メールソフトが自動で起動しない場合は、「本文をコピー」でコピーし、ご自身のメールソフト（Webメールも可）に貼り付けて宛先「<span id="footnote-addr"></span>」へ送信してください。</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   設定：チームリーダーの報告先メールアドレス
+   配布前に必ず実際のアドレスに書き換えてください。
+   ============================================================ */
+const TEAM_LEADER_EMAIL = "leader@example.co.jp";
+
+/* ============================================================
+   設定：結果を自動保存するGoogleフォーム
+   フォームのIDと、各質問のentry IDを指定する。
+   （フォームの質問順：氏名 → 職種 → 得点 → 正答率 → 受験日時 → 設問別結果）
+   ============================================================ */
+const GOOGLE_FORM_ID = "1FAIpQLScF2IydX88rKT9TxAb9qTY4__BlSNVHySxiwoPV_eRhtZ3B4w";
+const GOOGLE_FORM_RESPONSE_URL = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`;
+const FORM_ENTRY = {
+  name:    "entry.1497023593", // 氏名
+  role:    "entry.331292099",  // 職種
+  score:   "entry.1676246864", // 得点
+  percent: "entry.1969723381", // 正答率
+  datetime:"entry.970210513",  // 受験日時
+  detail:  "entry.904645516"   // 設問別結果
+};
+
+function submitToGoogleForm(fields) {
+  const formData = new URLSearchParams();
+  formData.append(FORM_ENTRY.name, fields.name);
+  formData.append(FORM_ENTRY.role, fields.role);
+  formData.append(FORM_ENTRY.score, fields.score);
+  formData.append(FORM_ENTRY.percent, fields.percent);
+  formData.append(FORM_ENTRY.datetime, fields.datetime);
+  formData.append(FORM_ENTRY.detail, fields.detail);
+
+  // no-corsで送信するため成否はJS側から確認できないが、Googleフォームの仕様上
+  // リクエスト自体は正常に届く。フォーム送信の失敗はユーザー体験に影響させない。
+  fetch(GOOGLE_FORM_RESPONSE_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: formData.toString()
+  }).catch(() => {});
+}
+
+/* ============================================================
+   設問データ（職務定義書 Ver.1.2 に基づく）
+   ============================================================ */
+const QUIZ_DATA = {
+  dev_junior: {
+    label: "Developer（初級）",
+    desc: "指示通り正確に実装する",
+    questions: [
+      { cat:"役割理解", q:"初級Developerの判断基準として、職務定義書に定められているものはどれか。",
+        options:["チーム全体の生産性を上げているか","指示通り正確に実装できているか","自身の考えで完結できるか","システム全体を最適化できているか"], correct:1 },
+      { cat:"NG行動", q:"初級DeveloperのNG行動に該当しないものはどれか。",
+        options:["自己判断で仕様変更する","レビュー指摘を無視する","不明点をすぐに質問し確認する","進捗を報告しない"], correct:2 },
+      { cat:"DoD", q:"初級DeveloperのDefinition of Doneに含まれないものはどれか。",
+        options:["レビューが承認されている","バグゼロ件である","技術課題リストが整理されている","指摘修正が完了している"], correct:2 },
+      { cat:"KPI", q:"初級DeveloperのKPIとして定義されているものはどれか。",
+        options:["技術起因障害率","バグ件数","見積誤差","顧客満足"], correct:1 },
+      { cat:"タスク（週次）", q:"初級Developerの週次タスクに該当するものはどれか。",
+        options:["設計レビュー主導","レビュー指摘対応","技術課題解決","KPI集計"], correct:1 },
+      { cat:"OUTPUT", q:"初級DeveloperのOUTPUTとして定義されているものはどれか。",
+        options:["コードと単体テスト結果","アーキテクチャ設計書","障害分析レポート","テスト計画書"], correct:0 },
+      { cat:"タスク（月次）", q:"初級Developerの月次タスクに含まれるものはどれか。",
+        options:["技術戦略整理","スキル向上（学習）","教育計画の更新","品質メトリクスレビュー"], correct:1 },
+      { cat:"タスク（イベント）", q:"初級Developerのイベントタスクとして正しいものはどれか。",
+        options:["アーキ設計支援","設計説明会への参加","キックオフでのプロジェクト計画説明","障害分析主導"], correct:1 },
+    ]
+  },
+  dev_mid: {
+    label: "Developer（中級）",
+    desc: "自力で機能単位を完結できる",
+    questions: [
+      { cat:"役割理解", q:"中級Developerの判断基準として定義されているものはどれか。",
+        options:["指示通り正確に実装できているか","自力で機能単位を完結できるか","システム全体として最適か","チームを指導できているか"], correct:1 },
+      { cat:"NG行動", q:"中級DeveloperのNG行動に該当しないものはどれか。",
+        options:["設計を無視する","レビューを形骸化させる","課題をチームで共有する","品質を軽視する"], correct:2 },
+      { cat:"DoD", q:"中級DeveloperのDefinition of Doneに含まれないものはどれか。",
+        options:["設計を理解している","テストケースが網羅されている","技術選定の理由が明確である","品質基準をクリアしている"], correct:2 },
+      { cat:"OUTPUT", q:"中級DeveloperのOUTPUTに含まれるものはどれか。",
+        options:["設計書（モジュール・コンポーネント）","アーキテクチャ設計書","テスト計画書","品質レポート"], correct:0 },
+      { cat:"タスク（日次）", q:"中級Developerの日次タスクに含まれないものはどれか。",
+        options:["チケット確認","コードレビュー実施","品質メトリクスレビュー","障害対応"], correct:2 },
+      { cat:"KPI", q:"中級DeveloperのKPIとして定義されているものはどれか。",
+        options:["バグ再発率","納期遵守率","顧客満足","見積誤差"], correct:0 },
+      { cat:"タスク（イベント）", q:"中級Developerのイベントタスクとして正しいものはどれか。",
+        options:["アーキ設計","詳細設計","キックオフ","テスト方針設計"], correct:1 },
+      { cat:"タスク（月次）", q:"中級Developerの月次タスクに含まれるものはどれか。",
+        options:["品質改善提案","技術標準改善","組織課題の整理","評価面談"], correct:0 },
+    ]
+  },
+  dev_senior: {
+    label: "Developer（上級）",
+    desc: "チーム全体の生産性・品質を良くする",
+    questions: [
+      { cat:"役割理解", q:"上級Developerの判断基準として定義されているものはどれか。",
+        options:["指示通り正しく作成する","自身の考えで作成する","チーム全体の生産性・品質を良くする","手順通り正確に実行する"], correct:2 },
+      { cat:"NG行動", q:"上級DeveloperのNG行動に該当しないものはどれか。",
+        options:["属人化させる","過度な自己流で進める","中級・初級Developerを育成する","チームを無視する"], correct:2 },
+      { cat:"DoD", q:"上級DeveloperのDefinition of Doneに含まれないものはどれか。",
+        options:["設計の妥当性が保たれている","再現性が確保されている","技術課題に優先順位付けがされている","品質が担保されている"], correct:2 },
+      { cat:"タスク（月次）", q:"上級Developerの月次タスクとして正しいものはどれか。",
+        options:["中級・初級Developerの育成","教育計画の更新","採用判断","品質メトリクスレビュー"], correct:0 },
+      { cat:"タスク（日次）", q:"上級Developerの日次タスクに含まれるものはどれか。",
+        options:["チケット確認","複雑機能実装","テストケース実行","稼働率確認"], correct:1 },
+      { cat:"KPI", q:"上級DeveloperのKPIとして定義されているものはどれか。",
+        options:["開発チーム生産性","見積誤差","手戻り率","テストカバレッジ"], correct:0 },
+      { cat:"タスク（イベント）", q:"上級Developerのイベントタスクとして正しいものはどれか。",
+        options:["障害の根本解決","キックオフ支援","UAT観点定義","リリース判断"], correct:0 },
+      { cat:"OUTPUT", q:"上級DeveloperのOUTPUTに含まれないものはどれか。",
+        options:["コード","技術資料","品質レポート","改善提案"], correct:2 },
+    ]
+  },
+  tester_junior: {
+    label: "Tester（初級）",
+    desc: "指示通りにテストする",
+    questions: [
+      { cat:"役割理解", q:"初級Testerの判断基準として定義されているものはどれか。",
+        options:["もれなく不具合を検出したか","手順通り正確に実行できているか","品質リスクを潰せているか","ユーザ影響を基準に判断できるか"], correct:1 },
+      { cat:"NG行動", q:"初級TesterのNG行動に該当しないものはどれか。",
+        options:["手順を無視する","再現確認をしない","再現確認を徹底する","曖昧なバグ報告をする"], correct:2 },
+      { cat:"DoD", q:"初級TesterのDefinition of Doneに含まれないものはどれか。",
+        options:["全ケースが実施済みである","結果が記録済みである","テスト観点が網羅済みである","再現確認済みである"], correct:2 },
+      { cat:"OUTPUT", q:"初級TesterのOUTPUTとして定義されているものはどれか。",
+        options:["テスト結果とバグ票","テストケースと改善したテスト観点","テスト方針書","品質分析レポート"], correct:0 },
+      { cat:"KPI", q:"初級TesterのKPIとして定義されているものはどれか。",
+        options:["テスト実行精度","バグ検出率","不具合流出率","テストカバレッジ"], correct:0 },
+      { cat:"タスク（週次）", q:"初級Testerの週次タスクに該当するものはどれか。",
+        options:["テスト観点レビュー","テスト進捗共有","品質状況レビュー","不具合分析"], correct:1 },
+      { cat:"タスク（月次）", q:"初級Testerの月次タスクに含まれるものはどれか。",
+        options:["不具合パターンの習得","品質分析","テストプロセス改善","不具合傾向分析"], correct:0 },
+      { cat:"タスク（イベント）", q:"初級Testerのイベントタスクとして正しいものはどれか。",
+        options:["テスト方針設計","テストケース設計","テスト実行","障害分析主導"], correct:2 },
+    ]
+  },
+  tester_mid: {
+    label: "Tester（中級）",
+    desc: "自分でテスト観点を増やす",
+    questions: [
+      { cat:"役割理解", q:"中級Testerの判断基準として定義されているものはどれか。",
+        options:["手順通り正確に実行できているか","重要な不具合を漏らさず検出できるか","品質リスクをコントロールできているか","チームを指導できているか"], correct:1 },
+      { cat:"NG行動", q:"中級TesterのNG行動に該当しないものはどれか。",
+        options:["テスト観点が不足する","再現性が不十分である","影響範囲を考慮して分析する","影響範囲を考慮しない"], correct:2 },
+      { cat:"DoD", q:"中級TesterのDefinition of Doneに含まれないものはどれか。",
+        options:["テスト観点が網羅済みである","優先度が適切に設定されている","品質改善施策が実行済みである","再現性が担保されている"], correct:2 },
+      { cat:"OUTPUT", q:"中級TesterのOUTPUTとして定義されているものはどれか。",
+        options:["テストケースと改善したテスト観点","テスト結果とバグ票","品質分析レポート","テスト方針書"], correct:0 },
+      { cat:"タスク（日次）", q:"中級Testerの日次タスクに含まれるものはどれか。",
+        options:["テスト結果記録","バグ分析","品質リスク評価","重障害分析"], correct:1 },
+      { cat:"KPI", q:"中級TesterのKPIとして定義されているものはどれか。",
+        options:["テスト観点追加数","テスト実行精度","不具合流出率","テストカバレッジ"], correct:0 },
+      { cat:"タスク（イベント）", q:"中級Testerのイベントタスクとして正しいものはどれか。",
+        options:["テスト方針設計","テストケース設計","テスト実行","品質判定支援"], correct:1 },
+      { cat:"タスク（月次）", q:"中級Testerの月次タスクに含まれるものはどれか。",
+        options:["品質改善提案","テストプロセス改善","再発防止策策定","品質メトリクスレビュー"], correct:0 },
+    ]
+  },
+  tester_senior: {
+    label: "Tester（上級）",
+    desc: "品質リスクをコントロールする",
+    questions: [
+      { cat:"役割理解", q:"上級Testerの判断基準として定義されているものはどれか。",
+        options:["指示通りにテストする","自分でテスト観点を増やす","品質リスクをコントロールする","手順通り正確に実行する"], correct:2 },
+      { cat:"NG行動", q:"上級TesterのNG行動に該当しないものはどれか。",
+        options:["品質判断を曖昧にする","重要なリスクを見逃す","チームを指導し標準化する","属人化させる"], correct:2 },
+      { cat:"DoD", q:"上級TesterのDefinition of Doneに含まれないものはどれか。",
+        options:["品質リスクが明確になっている","再発防止策が策定済みである","全ケースが実施済みである","品質改善施策が実行済みである"], correct:2 },
+      { cat:"OUTPUT", q:"上級TesterのOUTPUTとして定義されているものはどれか。",
+        options:["テスト方針書","テストケース","バグ票","テスト結果"], correct:0 },
+      { cat:"タスク（イベント）", q:"上級Testerのイベントタスクとして正しいものはどれか。",
+        options:["テストケース設計","テスト方針設計","テスト実行","レビュー主導"], correct:1 },
+      { cat:"KPI", q:"上級TesterのKPIとして定義されているものはどれか。",
+        options:["品質改善数","バグ検出率","テスト観点追加数","実行完了率"], correct:0 },
+      { cat:"タスク（週次）", q:"上級Testerの週次タスクに該当するものはどれか。",
+        options:["テスト進捗共有","品質状況レビュー","テストケース見直し","レビュー指摘対応"], correct:1 },
+      { cat:"タスク（月次）", q:"上級Testerの月次タスクに含まれるものはどれか。",
+        options:["品質分析","不具合パターン習得","不具合傾向分析","テスト観点強化"], correct:0 },
+    ]
+  },
+  pm: {
+    label: "Project Manager",
+    desc: "QCDの最終責任者",
+    questions: [
+      { cat:"役割理解", q:"職務定義書における、PMの役割概要として定義されているものはどれか。",
+        options:["技術意思決定者","QCDの最終責任者","品質保証責任者","拠点の事業・品質・人材を統括"], correct:1 },
+      { cat:"RACI", q:"基本RACI表において、PMが「A（説明責任者）」を担わない領域はどれか。",
+        options:["要件管理","画面設計","品質保証","リリース判断"], correct:1 },
+      { cat:"NG行動", q:"PMのNG行動に該当しないものはどれか。",
+        options:["進捗を感覚で判断する","遅延を隠蔽する","課題管理リストを常に更新する","リスク対応を後回しにする"], correct:2 },
+      { cat:"DoD", q:"PMのDefinition of Doneに含まれないものはどれか。",
+        options:["プロジェクト計画がスコープ・WBS・スケジュール・体制・リスクで定義・承認済みである","全課題に対応方針と期限が設定済みである","技術課題の優先順位付け・対応方針が決定されている","QAと合意しリリース可能状態になっている"], correct:2 },
+      { cat:"KPI", q:"PMのKPIとして定義されていないものはどれか。",
+        options:["納期厳守率（基準95%以上）","見積誤差（±10%以内）","稼働率（80%以上）","変更管理率"], correct:2 },
+      { cat:"最終意思決定", q:"職務定義書の最終意思決定ルールにおいて、PMが最終責任を持つ領域はどれか。",
+        options:["要件","技術","品質","全体"], correct:3 },
+      { cat:"タスク（週次）", q:"PMの週次タスクに含まれるものはどれか。",
+        options:["予算消化状況の確認","KPI分析","見積もり精度改善","プロジェクト計画の作成"], correct:0 },
+      { cat:"運用ルール", q:"職務定義書に定められた例外時の運用ルールとして正しいものはどれか。",
+        options:["仕様が曖昧な場合でも納期優先で実装を進める","仕様が曖昧な場合は実装をStopし、BrSEに確認する","緊急時は役割分担を柔軟に変更してよい","品質問題発生時はPMの判断を優先する"], correct:1 },
+    ]
+  }
+};
+
+/* ============================================================
+   状態
+   ============================================================ */
+let state = {
+  name: "",
+  roleKey: null,
+  index: 0,
+  answers: [], // {selected, correct}
+  formSubmitted: false
+};
+
+/* ============================================================
+   画面参照
+   ============================================================ */
+const screenStart = document.getElementById('screen-start');
+const screenQuiz = document.getElementById('screen-quiz');
+const screenResult = document.getElementById('screen-result');
+
+const inputName = document.getElementById('input-name');
+const roleGrid = document.getElementById('role-grid');
+const errorName = document.getElementById('error-name');
+const errorRole = document.getElementById('error-role');
+const btnStart = document.getElementById('btn-start');
+
+const progressLabel = document.getElementById('progress-label');
+const progressRole = document.getElementById('progress-role');
+const progressFill = document.getElementById('progress-fill');
+const qTag = document.getElementById('q-tag');
+const qText = document.getElementById('q-text');
+const qOptions = document.getElementById('q-options');
+const btnNext = document.getElementById('btn-next');
+
+const scoreNumber = document.getElementById('score-number');
+const scorePercent = document.getElementById('score-percent');
+const scoreTier = document.getElementById('score-tier');
+const reviewList = document.getElementById('review-list');
+const btnRetry = document.getElementById('btn-retry');
+const btnMail = document.getElementById('btn-mail');
+const mailPanel = document.getElementById('mail-panel');
+const mpTo = document.getElementById('mp-to');
+const mpSubject = document.getElementById('mp-subject');
+const mpBody = document.getElementById('mp-body');
+const btnOpenMail = document.getElementById('btn-open-mail');
+const btnCopyBody = document.getElementById('btn-copy-body');
+const copyMsg = document.getElementById('copy-msg');
+document.getElementById('footnote-addr').textContent = TEAM_LEADER_EMAIL;
+
+/* ============================================================
+   ロール選択カードの生成
+   ============================================================ */
+Object.keys(QUIZ_DATA).forEach(key => {
+  const role = QUIZ_DATA[key];
+  const div = document.createElement('label');
+  div.className = 'role-option';
+  div.dataset.key = key;
+  div.innerHTML = `
+    <input type="radio" name="role" value="${key}">
+    <div class="r-name">${role.label}</div>
+    <div class="r-desc">${role.desc}</div>
+  `;
+  div.addEventListener('click', () => {
+    document.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
+    div.classList.add('selected');
+    state.roleKey = key;
+    errorRole.style.display = 'none';
+  });
+  roleGrid.appendChild(div);
+});
+
+/* ============================================================
+   開始ボタン
+   ============================================================ */
+btnStart.addEventListener('click', () => {
+  const name = inputName.value.trim();
+  let ok = true;
+  if (!name) { errorName.style.display = 'block'; ok = false; } else { errorName.style.display = 'none'; }
+  if (!state.roleKey) { errorRole.style.display = 'block'; ok = false; }
+  if (!ok) return;
+
+  state.name = name;
+  state.index = 0;
+  state.answers = [];
+
+  screenStart.classList.add('hidden');
+  screenQuiz.classList.remove('hidden');
+  progressRole.textContent = QUIZ_DATA[state.roleKey].label;
+  renderQuestion();
+});
+
+/* ============================================================
+   設問レンダリング
+   ============================================================ */
+let selectedOption = null;
+
+function renderQuestion() {
+  selectedOption = null;
+  btnNext.disabled = true;
+
+  const role = QUIZ_DATA[state.roleKey];
+  const total = role.questions.length;
+  const q = role.questions[state.index];
+
+  progressLabel.textContent = `Q${state.index + 1} / ${total}`;
+  progressFill.style.width = `${(state.index / total) * 100}%`;
+
+  qTag.textContent = q.cat;
+  qText.textContent = q.q;
+  qOptions.innerHTML = '';
+
+  const letters = ['A', 'B', 'C', 'D'];
+  q.options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt}</span>`;
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+      div.classList.add('selected');
+      selectedOption = i;
+      btnNext.disabled = false;
+    });
+    qOptions.appendChild(div);
+  });
+
+  btnNext.textContent = (state.index === total - 1) ? '結果を見る' : '次へ';
+}
+
+btnNext.addEventListener('click', () => {
+  const role = QUIZ_DATA[state.roleKey];
+  const q = role.questions[state.index];
+  state.answers.push({
+    selected: selectedOption,
+    correctIndex: q.correct,
+    isCorrect: selectedOption === q.correct
+  });
+
+  if (state.index < role.questions.length - 1) {
+    state.index += 1;
+    renderQuestion();
+  } else {
+    progressFill.style.width = '100%';
+    showResult();
+  }
+});
+
+/* ============================================================
+   結果画面
+   ============================================================ */
+function showResult() {
+  screenQuiz.classList.add('hidden');
+  screenResult.classList.remove('hidden');
+
+  const role = QUIZ_DATA[state.roleKey];
+  const total = role.questions.length;
+  const correctCount = state.answers.filter(a => a.isCorrect).length;
+  const percent = Math.round((correctCount / total) * 100);
+
+  scoreNumber.innerHTML = `${correctCount}<span>/${total}</span>`;
+  scorePercent.textContent = `正答率 ${percent}%`;
+
+  scoreTier.innerHTML = '';
+  const tierSpan = document.createElement('span');
+  tierSpan.className = 'score-tier ' + (percent >= 75 ? 'tier-pass' : 'tier-review');
+  tierSpan.textContent = percent >= 75 ? '合格ライン到達' : '要復習';
+  scoreTier.appendChild(tierSpan);
+
+  const letters = ['A', 'B', 'C', 'D'];
+  reviewList.innerHTML = '';
+  role.questions.forEach((q, i) => {
+    const a = state.answers[i];
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    div.innerHTML = `
+      <div class="rq">Q${i + 1}. ${q.q}</div>
+      <div class="review-row"><span class="rl">回答</span><span class="${a.isCorrect ? 'badge-correct' : 'badge-wrong'}">${letters[a.selected]}. ${q.options[a.selected]}　${a.isCorrect ? '（正解）' : '（不正解）'}</span></div>
+      ${a.isCorrect ? '' : `<div class="review-row"><span class="rl">正解</span><span class="badge-correct">${letters[q.correct]}. ${q.options[q.correct]}</span></div>`}
+    `;
+    reviewList.appendChild(div);
+  });
+}
+
+/* ============================================================
+   もう一度受験
+   ============================================================ */
+btnRetry.addEventListener('click', () => {
+  state = { name: state.name, roleKey: null, index: 0, answers: [], formSubmitted: false };
+  document.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
+  mailPanel.classList.add('hidden');
+  screenResult.classList.add('hidden');
+  screenStart.classList.remove('hidden');
+});
+
+/* ============================================================
+   メール報告（下書き表示 → コピー or メールソフト起動）
+   ============================================================ */
+function buildMailContent() {
+  const role = QUIZ_DATA[state.roleKey];
+  const total = role.questions.length;
+  const correctCount = state.answers.filter(a => a.isCorrect).length;
+  const percent = Math.round((correctCount / total) * 100);
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  const letters = ['A', 'B', 'C', 'D'];
+  let detail = '';
+  role.questions.forEach((q, i) => {
+    const a = state.answers[i];
+    detail += `Q${i + 1}（${q.cat}）: ${a.isCorrect ? '正解' : '不正解'}${a.isCorrect ? '' : `　※回答:${letters[a.selected]} 正解:${letters[q.correct]}`}\n`;
+  });
+
+  const subject = `【職務定義書 理解度テスト】${state.name}さん（${role.label}）の結果`;
+  const body =
+`職務定義書 理解度テスト 受験結果
+
+氏名　　：${state.name}
+職種　　：${role.label}
+受験日時：${dateStr}
+得点　　：${correctCount} / ${total}（正答率 ${percent}%）
+
+―― 設問別結果 ――
+${detail}
+以上、ご確認をお願いいたします。`;
+
+  return {
+    subject,
+    body,
+    formFields: {
+      name: state.name,
+      role: role.label,
+      score: `${correctCount}/${total}`,
+      percent: `${percent}%`,
+      datetime: dateStr,
+      detail: detail.trim()
+    }
+  };
+}
+
+btnMail.addEventListener('click', () => {
+  const { subject, body, formFields } = buildMailContent();
+  mpTo.value = TEAM_LEADER_EMAIL;
+  mpSubject.value = subject;
+  mpBody.value = body;
+  copyMsg.style.display = 'none';
+  mailPanel.classList.remove('hidden');
+  mailPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+  // 同じ結果を何度も記録しないよう、1回の受験につき1回だけGoogleフォームへ送信する
+  if (!state.formSubmitted) {
+    submitToGoogleForm(formFields);
+    state.formSubmitted = true;
+  }
+});
+
+btnOpenMail.addEventListener('click', () => {
+  const mailtoUrl = `mailto:${TEAM_LEADER_EMAIL}?subject=${encodeURIComponent(mpSubject.value)}&body=${encodeURIComponent(mpBody.value)}`;
+  // アンカー要素経由でクリックする方式は location.href への直接代入より
+  // サンドボックス環境でブロックされにくい
+  const a = document.createElement('a');
+  a.href = mailtoUrl;
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+
+btnCopyBody.addEventListener('click', async () => {
+  const text = `宛先：${mpTo.value}\n件名：${mpSubject.value}\n\n${mpBody.value}`;
+  try {
+    await navigator.clipboard.writeText(text);
+    copyMsg.style.display = 'block';
+  } catch (e) {
+    // clipboard APIが使えない環境向けフォールバック
+    mpBody.focus();
+    mpBody.select();
+    try {
+      document.execCommand('copy');
+      copyMsg.style.display = 'block';
+    } catch (e2) {
+      copyMsg.textContent = 'コピーに失敗しました。本文欄を選択して手動でコピーしてください。';
+      copyMsg.style.color = 'var(--red)';
+      copyMsg.style.display = 'block';
+    }
+  }
+});
+</script>
+</body>
+</html>
