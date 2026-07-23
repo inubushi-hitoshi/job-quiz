@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BrSE職務定義理解度クイズ｜T&T Design R&D team</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#14213D;
+    --navy-2:#1F2E52;
+    --slate:#5B6478;
+    --slate-light:#8890A0;
+    --amber:#C68A2E;
+    --amber-light:#E9C888;
+    --green:#2F7D5C;
+    --green-bg:#E7F3EC;
+    --red:#B3452F;
+    --red-bg:#FBEAE5;
+    --bg:#F3F1EC;
+    --paper:#FFFFFF;
+    --line:#E1DFD7;
+    --line-strong:#C9C6BA;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    background-image:
+      radial-gradient(circle at 15% 8%, rgba(20,33,61,0.05), transparent 40%),
+      radial-gradient(circle at 85% 92%, rgba(198,138,46,0.06), transparent 45%);
+    font-family:'Inter', sans-serif;
+    color:var(--navy);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:40px 16px 64px;
+    line-height:1.6;
+  }
+
+  .doc{ width:100%; max-width:720px; }
+
+  .letterhead{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding-bottom:18px;
+    margin-bottom:28px;
+    border-bottom:2px solid var(--navy);
+  }
+  .letterhead .mark{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    color:var(--slate);
+    text-transform:uppercase;
+  }
+  .letterhead .rev{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--slate-light);
+    border:1px solid var(--line-strong);
+    padding:3px 8px;
+    border-radius:3px;
+  }
+
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:2px;
+    box-shadow:0 1px 2px rgba(20,33,61,0.04), 0 12px 32px -20px rgba(20,33,61,0.25);
+    padding:44px 40px;
+    position:relative;
+  }
+  .card::before{
+    content:"";
+    position:absolute;
+    left:0; top:0; bottom:0;
+    width:4px;
+    background:linear-gradient(180deg, var(--navy), var(--amber));
+  }
+
+  h1{
+    font-family:'Zilla Slab', serif;
+    font-weight:700;
+    font-size:26px;
+    margin:0 0 6px;
+    color:var(--navy);
+    letter-spacing:0.01em;
+  }
+  .subtitle{ font-size:14px; color:var(--slate); margin:0 0 28px; }
+
+  label.field-label{
+    display:block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--slate);
+    margin-bottom:8px;
+  }
+
+  input[type="text"]{
+    width:100%;
+    padding:12px 14px;
+    font-family:'Inter', sans-serif;
+    font-size:15px;
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    background:#FCFBF9;
+    color:var(--navy);
+    margin-bottom:24px;
+  }
+  input[type="text"]:focus{
+    outline:2px solid var(--amber);
+    outline-offset:1px;
+    border-color:var(--amber);
+  }
+
+  button.primary{
+    width:100%;
+    padding:14px 18px;
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    color:#fff;
+    background:var(--navy);
+    border:none;
+    border-radius:3px;
+    cursor:pointer;
+    letter-spacing:0.01em;
+    transition:background .15s;
+  }
+  button.primary:hover:not(:disabled){background:var(--navy-2);}
+  button.primary:disabled{background:var(--slate-light); cursor:not-allowed;}
+
+  button.secondary{
+    width:100%;
+    padding:12px 18px;
+    font-family:'Inter', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    color:var(--navy);
+    background:transparent;
+    border:1px solid var(--navy);
+    border-radius:3px;
+    cursor:pointer;
+    margin-top:10px;
+  }
+  button.secondary:hover{background:#EFF1F6;}
+
+  .error-msg{
+    font-size:13px;
+    color:var(--red);
+    margin:-16px 0 20px;
+    display:none;
+  }
+
+  .progress-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .progress-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--slate);
+  }
+  .progress-track{
+    height:6px;
+    background:var(--line);
+    border-radius:3px;
+    overflow:hidden;
+    margin-bottom:28px;
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--navy), var(--amber));
+    border-radius:3px;
+    transition:width .3s ease;
+  }
+
+  .tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    color:var(--amber);
+    border:1px solid var(--amber-light);
+    background:#FCF6EA;
+    padding:3px 9px;
+    border-radius:2px;
+    margin-bottom:14px;
+  }
+
+  .question-text{
+    font-family:'Zilla Slab', serif;
+    font-size:19px;
+    font-weight:600;
+    color:var(--navy);
+    margin:0 0 20px;
+    line-height:1.55;
+  }
+
+  .options{ display:flex; flex-direction:column; gap:10px; margin-bottom:26px; }
+  .option{
+    border:1px solid var(--line-strong);
+    border-radius:3px;
+    padding:13px 16px;
+    cursor:pointer;
+    background:#FCFBF9;
+    font-size:14.5px;
+    color:var(--navy);
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    transition:border-color .15s, background .15s;
+  }
+  .option:hover{border-color:var(--slate-light);}
+  .option .letter{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    color:var(--slate);
+    flex-shrink:0;
+  }
+  .option.selected{ border-color:var(--navy); background:#EFF1F6; }
+  .option.selected .letter{color:var(--navy);}
+
+  .score-block{
+    text-align:center;
+    padding:20px 0 30px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:26px;
+  }
+  .score-number{
+    font-family:'Zilla Slab', serif;
+    font-size:56px;
+    font-weight:700;
+    color:var(--navy);
+    line-height:1;
+  }
+  .score-number span{font-size:26px; color:var(--slate);}
+  .score-caption{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--slate);
+    margin-top:8px;
+  }
+  .score-tier{
+    display:inline-block;
+    margin-top:14px;
+    padding:6px 16px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+  }
+  .tier-pass{background:var(--green-bg); color:var(--green);}
+  .tier-review{background:var(--red-bg); color:var(--red);}
+
+  .review-item{
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding:16px 18px;
+    margin-bottom:12px;
+  }
+  .review-item .rq{ font-size:14px; font-weight:600; color:var(--navy); margin-bottom:8px; }
+  .review-row{ font-size:13px; display:flex; gap:8px; margin-bottom:4px; }
+  .review-row .rl{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--slate);
+    min-width:64px;
+    padding-top:1px;
+  }
+  .badge-correct{color:var(--green); font-weight:600;}
+  .badge-wrong{color:var(--red); font-weight:600;}
+
+  .actions-row{ display:flex; gap:10px; margin-top:28px; }
+  .actions-row button{flex:1; margin-top:0;}
+
+  .save-status{
+    margin-top:16px;
+    padding:12px 16px;
+    border-radius:3px;
+    font-size:13.5px;
+    font-weight:600;
+    display:none;
+  }
+  .save-status.ok{ background:var(--green-bg); color:var(--green); display:block; }
+  .save-status.saving{ background:#EFF1F6; color:var(--navy); display:block; }
+
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div class="doc">
+  <div class="letterhead">
+    <span class="mark">T&amp;T Design R&amp;D Team — 職務定義書</span>
+    <span class="rev">Ver.1.2 準拠</span>
+  </div>
+
+  <div class="card">
+
+    <!-- SCREEN 1: START -->
+    <div id="screen-start">
+      <h1>BrSE職務定義理解度クイズ</h1>
+      <p class="subtitle">氏名を入力し、テストを開始してください（全20問）。</p>
+
+      <label class="field-label" for="input-name">氏名</label>
+      <input type="text" id="input-name" placeholder="例）山田 太郎">
+      <div class="error-msg" id="error-name">氏名を入力してください。</div>
+
+      <button class="primary" id="btn-start">テストを開始する</button>
+    </div>
+
+    <!-- SCREEN 2: QUIZ -->
+    <div id="screen-quiz" class="hidden">
+      <div class="progress-row">
+        <span class="progress-label" id="progress-label">Q1 / 20</span>
+        <span class="progress-label">BrSE</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+
+      <div class="tag" id="q-tag">カテゴリ</div>
+      <p class="question-text" id="q-text"></p>
+      <div class="options" id="q-options"></div>
+
+      <button class="primary" id="btn-next" disabled>次へ</button>
+    </div>
+
+    <!-- SCREEN 3: RESULT -->
+    <div id="screen-result" class="hidden">
+      <h1>受験結果</h1>
+      <div class="score-block">
+        <div class="score-number" id="score-number">0<span>/20</span></div>
+        <div class="score-caption" id="score-percent">正答率 0%</div>
+        <div id="score-tier"></div>
+      </div>
+
+      <div id="review-list"></div>
+
+      <div class="actions-row">
+        <button class="secondary" id="btn-retry">もう一度トライ</button>
+        <button class="primary" id="btn-save">クイズ終了</button>
+      </div>
+      <div class="save-status" id="save-status"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   設問データ（職務定義書 Ver.1.2 — BrSEセクションに基づく、20問）
+   ============================================================ */
+const QUESTIONS = [
+  { cat:"役割理解",
+    q:"職務定義書における、BrSEの役割概要として定義されているものはどれか。",
+    options:["技術意思決定者","顧客要求を正確に理解し、TTDで開発可能な仕様に変換する","品質保証責任者","QCDの最終責任者"],
+    correct:1 },
+  { cat:"組織構造",
+    q:"BrSEの所属組織として、職務定義書に定義されているものはどれか。",
+    options:["T&T Design（TTD）所属","JASTY所属","TTDとJASTY双方に所属","拠点組織に所属"],
+    correct:1 },
+  { cat:"組織前提",
+    q:"組織前提の表において、「要件確定」の最終責任を持つのはどちらか。",
+    options:["JASTY","TTD","JASTYとTTDが共同で最終責任を持つ","チームリーダー"],
+    correct:0 },
+  { cat:"RACI",
+    q:"基本RACI表の「要件管理」において、BrSEが担う役割はどれか。",
+    options:["A（説明責任者）","R（実行責任者）","C（相談）","I（報告）"],
+    correct:1 },
+  { cat:"最終意思決定",
+    q:"職務定義書の最終意思決定ルールにおいて、BrSEが最終責任を持つ領域はどれか。",
+    options:["要件","技術","品質","全体"],
+    correct:0 },
+  { cat:"運用ルール",
+    q:"例外時の運用ルールとして、職務定義書に正しく定められているものはどれか。",
+    options:["納期優先であれば仕様未確定のまま実装してよい","仕様が曖昧な場合は実装をStopし、BrSEに確認する","緊急時は役割分担を崩してよい","品質問題発生時はBrSEの判断を優先する"],
+    correct:1 },
+  { cat:"主責任",
+    q:"BrSEの主責任に含まれないものはどれか。",
+    options:["要件整理","仕様明確化","顧客調整","品質保証の実行"],
+    correct:3 },
+  { cat:"権限",
+    q:"BrSEの権限として定義されているものはどれか。",
+    options:["要件ドラフト作成","リリース停止権","採用決定","スケジュール変更承認"],
+    correct:0 },
+  { cat:"KPI",
+    q:"BrSEのKPIとして定義されていないものはどれか。",
+    options:["手戻り率","認識齟齬率","仕様不備件数","重大障害数"],
+    correct:3 },
+  { cat:"OUTPUT",
+    q:"BrSEの主なアウトプットに含まれないものはどれか。",
+    options:["要件定義書","Q&A一覧","画面仕様書","テスト計画書"],
+    correct:3 },
+  { cat:"意思決定",
+    q:"BrSEの意思決定基準として定義されているものはどれか。",
+    options:["開発者が迷わないか","品質基準を満たしているか","予算内に収まっているか","チーム全体最適か"],
+    correct:0 },
+  { cat:"NG行動",
+    q:"BrSEのNG行動として定義されているものはどれか。",
+    options:["曖昧仕様のままTTDに渡す","不明点を都度確認する","変更管理表を更新する","Q&A一覧を整理する"],
+    correct:0 },
+  { cat:"タスク（日次）",
+    q:"BrSEのDailyタスクに含まれないものはどれか。",
+    options:["顧客からの質問・依頼を整理しチケット化する","仕様をTTDへ説明する","チケットの進捗・ステータス更新","月次のKPI集計"],
+    correct:3 },
+  { cat:"タスク（週次）",
+    q:"BrSEのWeeklyタスクとして正しいものはどれか。",
+    options:["顧客定例に参加し、仕様・新機能の認識合わせを行う","採用面談を実施する","技術方針を策定する","テスト計画を承認する"],
+    correct:0 },
+  { cat:"タスク（月次）",
+    q:"BrSEのMonthlyタスクに含まれるものはどれか。",
+    options:["手戻り分析（仕様起因の問題分析）","重大障害の原因分析","コーディング規約の更新","採用判断"],
+    correct:0 },
+  { cat:"タスク（イベント）",
+    q:"BrSEのイベントタスクにおいて、「要件定義」フェーズで行うものはどれか。",
+    options:["仕様書作成（要件定義書、画面仕様書）","テスト設計レビュー","障害分析","アーキテクチャ設計"],
+    correct:0 },
+  { cat:"タスク（イベント）",
+    q:"BrSEのイベントタスクにおいて、「テスト」フェーズで行うものはどれか。",
+    options:["受け入れ観点整理、UAT観点定義","テストケースの実行","バグ票の作成","品質判定会議の開催"],
+    correct:0 },
+  { cat:"DoD",
+    q:"BrSEのDefinition of Doneのうち、「要件定義」に関するものはどれか。",
+    options:["重大な不明点がなく、レビュー完了・承認済みであること","全ケースが実施済みであること","技術選定の理由が明確であること","品質基準を満たしていること"],
+    correct:0 },
+  { cat:"DoD",
+    q:"BrSEのDefinition of Doneのうち、「仕様説明」に関するものはどれか。",
+    options:["TTDが実装に支障がないレベルで仕様を理解していること","障害の原因が特定されていること","コードレビューが完了していること","顧客満足度が高評価であること"],
+    correct:0 },
+  { cat:"NG行動",
+    q:"BrSEのNG行動として、正しいものはどれか。",
+    options:["不明点を曖昧なままTTDに渡す","確認不足を解消してから開発へ渡す","仕様変更を変更管理表で記録する","顧客とTTDの認識ズレを都度確認する"],
+    correct:0 },
+];
+
+/* ============================================================
+   状態
+   ============================================================ */
+let state = { name: "", index: 0, answers: [], formSubmitted: false };
+
+/* ============================================================
+   画面参照
+   ============================================================ */
+const screenStart = document.getElementById('screen-start');
+const screenQuiz = document.getElementById('screen-quiz');
+const screenResult = document.getElementById('screen-result');
+
+const inputName = document.getElementById('input-name');
+const errorName = document.getElementById('error-name');
+const btnStart = document.getElementById('btn-start');
+
+const progressLabel = document.getElementById('progress-label');
+const progressFill = document.getElementById('progress-fill');
+const qTag = document.getElementById('q-tag');
+const qText = document.getElementById('q-text');
+const qOptions = document.getElementById('q-options');
+const btnNext = document.getElementById('btn-next');
+
+const scoreNumber = document.getElementById('score-number');
+const scorePercent = document.getElementById('score-percent');
+const scoreTier = document.getElementById('score-tier');
+const reviewList = document.getElementById('review-list');
+const btnRetry = document.getElementById('btn-retry');
+const btnSave = document.getElementById('btn-save');
+const saveStatus = document.getElementById('save-status');
+
+/* ============================================================
+   開始ボタン
+   ============================================================ */
+btnStart.addEventListener('click', () => {
+  const name = inputName.value.trim();
+  if (!name) { errorName.style.display = 'block'; return; }
+  errorName.style.display = 'none';
+
+  state.name = name;
+  state.index = 0;
+  state.answers = [];
+  state.formSubmitted = false;
+
+  screenStart.classList.add('hidden');
+  screenQuiz.classList.remove('hidden');
+  renderQuestion();
+});
+
+/* ============================================================
+   設問レンダリング
+   ============================================================ */
+let selectedOption = null;
+
+function renderQuestion() {
+  selectedOption = null;
+  btnNext.disabled = true;
+
+  const total = QUESTIONS.length;
+  const q = QUESTIONS[state.index];
+
+  progressLabel.textContent = `Q${state.index + 1} / ${total}`;
+  progressFill.style.width = `${(state.index / total) * 100}%`;
+
+  qTag.textContent = q.cat;
+  qText.textContent = q.q;
+  qOptions.innerHTML = '';
+
+  const letters = ['A', 'B', 'C', 'D'];
+  q.options.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt}</span>`;
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+      div.classList.add('selected');
+      selectedOption = i;
+      btnNext.disabled = false;
+    });
+    qOptions.appendChild(div);
+  });
+
+  btnNext.textContent = (state.index === total - 1) ? '結果を見る' : '次へ';
+}
+
+btnNext.addEventListener('click', () => {
+  const q = QUESTIONS[state.index];
+  state.answers.push({
+    selected: selectedOption,
+    correctIndex: q.correct,
+    isCorrect: selectedOption === q.correct
+  });
+
+  if (state.index < QUESTIONS.length - 1) {
+    state.index += 1;
+    renderQuestion();
+  } else {
+    progressFill.style.width = '100%';
+    showResult();
+  }
+});
+
+/* ============================================================
+   結果画面
+   ============================================================ */
+function showResult() {
+  screenQuiz.classList.add('hidden');
+  screenResult.classList.remove('hidden');
+  saveStatus.className = 'save-status';
+  saveStatus.textContent = '';
+
+  const total = QUESTIONS.length;
+  const correctCount = state.answers.filter(a => a.isCorrect).length;
+  const percent = Math.round((correctCount / total) * 100);
+
+  scoreNumber.innerHTML = `${correctCount}<span>/${total}</span>`;
+  scorePercent.textContent = `正答率 ${percent}%`;
+
+  scoreTier.innerHTML = '';
+  const tierSpan = document.createElement('span');
+  tierSpan.className = 'score-tier ' + (percent >= 75 ? 'tier-pass' : 'tier-review');
+  tierSpan.textContent = percent >= 75 ? '合格ライン到達' : '要復習';
+  scoreTier.appendChild(tierSpan);
+
+  const letters = ['A', 'B', 'C', 'D'];
+  reviewList.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const a = state.answers[i];
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    div.innerHTML = `
+      <div class="rq">Q${i + 1}. ${q.q}</div>
+      <div class="review-row"><span class="rl">回答</span><span class="${a.isCorrect ? 'badge-correct' : 'badge-wrong'}">${letters[a.selected]}. ${q.options[a.selected]}　${a.isCorrect ? '（正解）' : '（不正解）'}</span></div>
+      ${a.isCorrect ? '' : `<div class="review-row"><span class="rl">正解</span><span class="badge-correct">${letters[q.correct]}. ${q.options[q.correct]}</span></div>`}
+    `;
+    reviewList.appendChild(div);
+  });
+}
+
+/* ============================================================
+   もう一度受験
+   ============================================================ */
+btnRetry.addEventListener('click', () => {
+  state = { name: state.name, index: 0, answers: [], formSubmitted: false };
+  screenResult.classList.add('hidden');
+  screenStart.classList.remove('hidden');
+});
+
+/* ============================================================
+   クイズ終了
+   ============================================================ */
+btnSave.addEventListener('click', () => {
+  if (state.formSubmitted) return;
+  state.formSubmitted = true;
+  saveStatus.className = 'save-status ok';
+  saveStatus.textContent = 'お疲れ様でした。クイズを終了しました。';
+  btnSave.disabled = true;
+});
+</script>
+</body>
+</html>
