@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>職務定義書 理解度テスト｜T&T Design R&D team</title>
+<title>職務定義書 理解度テスト / Bài kiểm tra hiểu biết｜T&T Design R&D team</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@400;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
@@ -52,6 +52,8 @@
     padding-bottom:18px;
     margin-bottom:28px;
     border-bottom:2px solid var(--navy);
+    gap:12px;
+    flex-wrap:wrap;
   }
   .letterhead .mark{
     font-family:'IBM Plex Mono', monospace;
@@ -60,6 +62,11 @@
     color:var(--slate);
     text-transform:uppercase;
   }
+  .letterhead-right{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
   .letterhead .rev{
     font-family:'IBM Plex Mono', monospace;
     font-size:11px;
@@ -67,6 +74,27 @@
     border:1px solid var(--line-strong);
     padding:3px 8px;
     border-radius:3px;
+  }
+
+  .lang-toggle{
+    display:flex;
+    border:1px solid var(--navy);
+    border-radius:20px;
+    overflow:hidden;
+  }
+  .lang-toggle button{
+    font-family:'Inter', sans-serif;
+    font-size:12px;
+    font-weight:600;
+    padding:6px 14px;
+    border:none;
+    background:#fff;
+    color:var(--navy);
+    cursor:pointer;
+  }
+  .lang-toggle button.active{
+    background:var(--navy);
+    color:#fff;
   }
 
   .card{
@@ -88,7 +116,7 @@
   h1{
     font-family:'Zilla Slab', serif;
     font-weight:700;
-    font-size:28px;
+    font-size:26px;
     margin:0 0 6px;
     color:var(--navy);
     letter-spacing:0.01em;
@@ -341,7 +369,7 @@
     font-family:'IBM Plex Mono', monospace;
     font-size:11px;
     color:var(--slate);
-    min-width:64px;
+    min-width:80px;
     padding-top:1px;
   }
   .badge-correct{color:var(--green); font-weight:600;}
@@ -354,61 +382,23 @@
   }
   .actions-row button{flex:1; margin-top:0;}
 
-  .footnote{
-    text-align:center;
-    font-size:12px;
-    color:var(--slate-light);
-    margin-top:22px;
-  }
-
-  .mail-panel{
-    margin-top:22px;
-    border:1px solid var(--line-strong);
+  .save-status{
+    margin-top:16px;
+    padding:12px 16px;
     border-radius:3px;
-    background:#FCFBF9;
-    padding:18px 18px 20px;
-  }
-  .mail-panel .mp-title{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:11px;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color:var(--slate);
-    margin-bottom:10px;
-  }
-  .mail-panel label.field-label{margin-bottom:4px;}
-  .mail-panel input[type="text"]{margin-bottom:14px; font-size:13px; padding:9px 11px;}
-  .mail-panel textarea{
-    width:100%;
-    min-height:220px;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:12.5px;
-    line-height:1.6;
-    color:var(--navy);
-    border:1px solid var(--line-strong);
-    border-radius:3px;
-    background:#fff;
-    padding:12px 13px;
-    resize:vertical;
-    margin-bottom:14px;
-  }
-  .mail-panel .mp-actions{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-  }
-  .mail-panel .mp-actions button{
-    flex:1;
-    min-width:150px;
-    margin-top:0;
-    padding:11px 14px;
     font-size:13.5px;
-  }
-  .copy-msg{
-    font-size:12px;
-    color:var(--green);
-    margin-top:8px;
+    font-weight:600;
     display:none;
+  }
+  .save-status.ok{
+    background:var(--green-bg);
+    color:var(--green);
+    display:block;
+  }
+  .save-status.saving{
+    background:#EFF1F6;
+    color:var(--navy);
+    display:block;
   }
 
   .hidden{display:none !important;}
@@ -417,26 +407,32 @@
 <body>
 <div class="doc">
   <div class="letterhead">
-    <span class="mark">T&amp;T Design R&amp;D Team — 職務定義書</span>
-    <span class="rev">Ver.1.2 準拠</span>
+    <span class="mark" id="lh-mark">T&amp;T Design R&amp;D Team — 職務定義書</span>
+    <div class="letterhead-right">
+      <span class="rev" id="lh-rev">Ver.1.2 準拠</span>
+      <div class="lang-toggle">
+        <button type="button" id="lang-ja" class="active">日本語</button>
+        <button type="button" id="lang-vi">Tiếng Việt</button>
+      </div>
+    </div>
   </div>
 
   <div class="card">
 
     <!-- SCREEN 1: START -->
     <div id="screen-start">
-      <h1>職務定義書 理解度テスト</h1>
-      <p class="subtitle">自分の氏名と職種を入力し、テストを開始してください。設問は選択した職種に応じて出題されます（全8問）。</p>
+      <h1 id="txt-title"></h1>
+      <p class="subtitle" id="txt-subtitle"></p>
 
-      <label class="field-label" for="input-name">氏名</label>
-      <input type="text" id="input-name" placeholder="例）山田 太郎">
-      <div class="error-msg" id="error-name">氏名を入力してください。</div>
+      <label class="field-label" id="txt-name-label" for="input-name"></label>
+      <input type="text" id="input-name">
+      <div class="error-msg" id="error-name"></div>
 
-      <label class="field-label">職種を選択</label>
+      <label class="field-label" id="txt-role-label"></label>
       <div class="role-grid" id="role-grid"></div>
-      <div class="error-msg" id="error-role">職種を選択してください。</div>
+      <div class="error-msg" id="error-role"></div>
 
-      <button class="primary" id="btn-start">テストを開始する</button>
+      <button class="primary" id="btn-start"></button>
     </div>
 
     <!-- SCREEN 2: QUIZ -->
@@ -451,41 +447,25 @@
       <p class="question-text" id="q-text"></p>
       <div class="options" id="q-options"></div>
 
-      <button class="primary" id="btn-next" disabled>次へ</button>
+      <button class="primary" id="btn-next" disabled></button>
     </div>
 
     <!-- SCREEN 3: RESULT -->
     <div id="screen-result" class="hidden">
-      <h1>受験結果</h1>
+      <h1 id="txt-result-title"></h1>
       <div class="score-block">
         <div class="score-number" id="score-number">0<span>/8</span></div>
-        <div class="score-caption" id="score-percent">正答率 0%</div>
+        <div class="score-caption" id="score-percent"></div>
         <div id="score-tier"></div>
       </div>
 
       <div id="review-list"></div>
 
       <div class="actions-row">
-        <button class="secondary" id="btn-retry">もう一度受験する</button>
-        <button class="primary" id="btn-mail">結果をチームリーダーへ報告する</button>
+        <button class="secondary" id="btn-retry"></button>
+        <button class="primary" id="btn-save"></button>
       </div>
-
-      <div class="mail-panel hidden" id="mail-panel">
-        <div class="mp-title">報告メールの下書き</div>
-        <label class="field-label" for="mp-to">宛先</label>
-        <input type="text" id="mp-to" readonly>
-        <label class="field-label" for="mp-subject">件名</label>
-        <input type="text" id="mp-subject" readonly>
-        <label class="field-label" for="mp-body">本文</label>
-        <textarea id="mp-body" readonly></textarea>
-        <div class="mp-actions">
-          <button class="primary" id="btn-open-mail">メールソフトで開く</button>
-          <button class="secondary" id="btn-copy-body">本文をコピー</button>
-        </div>
-        <div class="copy-msg" id="copy-msg">コピーしました。メールソフトに貼り付けて送信してください。</div>
-      </div>
-
-      <p class="footnote">メールソフトが自動で起動しない場合は、「本文をコピー」でコピーし、ご自身のメールソフト（Webメールも可）に貼り付けて宛先「<span id="footnote-addr"></span>」へ送信してください。</p>
+      <div class="save-status" id="save-status"></div>
     </div>
 
   </div>
@@ -493,25 +473,17 @@
 
 <script>
 /* ============================================================
-   設定：チームリーダーの報告先メールアドレス
-   配布前に必ず実際のアドレスに書き換えてください。
-   ============================================================ */
-const TEAM_LEADER_EMAIL = "leader@example.co.jp";
-
-/* ============================================================
    設定：結果を自動保存するGoogleフォーム
-   フォームのIDと、各質問のentry IDを指定する。
-   （フォームの質問順：氏名 → 職種 → 得点 → 正答率 → 受験日時 → 設問別結果）
    ============================================================ */
 const GOOGLE_FORM_ID = "1FAIpQLScF2IydX88rKT9TxAb9qTY4__BlSNVHySxiwoPV_eRhtZ3B4w";
 const GOOGLE_FORM_RESPONSE_URL = `https://docs.google.com/forms/d/e/${GOOGLE_FORM_ID}/formResponse`;
 const FORM_ENTRY = {
-  name:    "entry.1497023593", // 氏名
-  role:    "entry.331292099",  // 職種
-  score:   "entry.1676246864", // 得点
-  percent: "entry.1969723381", // 正答率
-  datetime:"entry.970210513",  // 受験日時
-  detail:  "entry.904645516"   // 設問別結果
+  name:    "entry.1497023593",
+  role:    "entry.331292099",
+  score:   "entry.1676246864",
+  percent: "entry.1969723381",
+  datetime:"entry.970210513",
+  detail:  "entry.904645516"
 };
 
 function submitToGoogleForm(fields) {
@@ -523,172 +495,510 @@ function submitToGoogleForm(fields) {
   formData.append(FORM_ENTRY.datetime, fields.datetime);
   formData.append(FORM_ENTRY.detail, fields.detail);
 
-  // no-corsで送信するため成否はJS側から確認できないが、Googleフォームの仕様上
-  // リクエスト自体は正常に届く。フォーム送信の失敗はユーザー体験に影響させない。
-  fetch(GOOGLE_FORM_RESPONSE_URL, {
+  return fetch(GOOGLE_FORM_RESPONSE_URL, {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: formData.toString()
-  }).catch(() => {});
+  });
 }
 
 /* ============================================================
-   設問データ（職務定義書 Ver.1.2 に基づく）
+   UI文言（日本語 / ベトナム語）
+   ============================================================ */
+const UI = {
+  ja: {
+    mark: "T&T Design R&D Team — 職務定義書",
+    rev: "Ver.1.2 準拠",
+    title: "職務定義書 理解度テスト",
+    subtitle: "自分の氏名と職種を入力し、テストを開始してください。設問は選択した職種に応じて出題されます（全8問）。",
+    nameLabel: "氏名",
+    namePlaceholder: "例）山田 太郎",
+    errorName: "氏名を入力してください。",
+    roleLabel: "職種を選択",
+    errorRole: "職種を選択してください。",
+    btnStart: "テストを開始する",
+    next: "次へ",
+    seeResult: "結果を見る",
+    resultTitle: "受験結果",
+    percentLabel: (p) => `正答率 ${p}%`,
+    tierPass: "合格ライン到達",
+    tierReview: "要復習",
+    answerLabel: "回答",
+    correctLabel: "正解",
+    correctTag: "（正解）",
+    wrongTag: "（不正解）",
+    btnRetry: "もう一度受験する",
+    btnSave: "結果を保存",
+    saving: "保存しています…",
+    saved: "結果を保存しました。",
+    progress: (n, total) => `Q${n} / ${total}`
+  },
+  vi: {
+    mark: "Nhóm T&T Design R&D — Tài liệu định nghĩa công việc",
+    rev: "Tuân theo Ver.1.2",
+    title: "Bài kiểm tra hiểu biết về Tài liệu định nghĩa công việc",
+    subtitle: "Vui lòng nhập họ tên và chọn vị trí công việc của bạn, sau đó bắt đầu bài kiểm tra. Câu hỏi sẽ được đưa ra tương ứng với vị trí đã chọn (tổng cộng 8 câu).",
+    nameLabel: "Họ và tên",
+    namePlaceholder: "Ví dụ: Nguyễn Văn A",
+    errorName: "Vui lòng nhập họ và tên.",
+    roleLabel: "Chọn vị trí công việc",
+    errorRole: "Vui lòng chọn vị trí công việc.",
+    btnStart: "Bắt đầu bài kiểm tra",
+    next: "Tiếp theo",
+    seeResult: "Xem kết quả",
+    resultTitle: "Kết quả bài kiểm tra",
+    percentLabel: (p) => `Tỷ lệ đúng ${p}%`,
+    tierPass: "Đạt mức yêu cầu",
+    tierReview: "Cần ôn lại",
+    answerLabel: "Câu trả lời",
+    correctLabel: "Đáp án đúng",
+    correctTag: "(Đúng)",
+    wrongTag: "(Sai)",
+    btnRetry: "Làm lại bài kiểm tra",
+    btnSave: "Lưu kết quả",
+    saving: "Đang lưu...",
+    saved: "Đã lưu kết quả.",
+    progress: (n, total) => `Câu ${n} / ${total}`
+  }
+};
+
+let currentLang = 'ja';
+
+/* ============================================================
+   設問データ（職務定義書 Ver.1.2 に基づく／日本語・ベトナム語）
    ============================================================ */
 const QUIZ_DATA = {
-  dev_junior: {
-    label: "Developer（初級）",
-    desc: "指示通り正確に実装する",
+  brse: {
+    label: "BrSE", label_vi: "BrSE (Cầu nối yêu cầu khách hàng)",
+    desc: "顧客要求を正確に理解し、TTDで開発可能な仕様に変換する", desc_vi: "Hiểu chính xác yêu cầu khách hàng và chuyển thành đặc tả TTD có thể phát triển",
     questions: [
-      { cat:"役割理解", q:"初級Developerの判断基準として、職務定義書に定められているものはどれか。",
-        options:["チーム全体の生産性を上げているか","指示通り正確に実装できているか","自身の考えで完結できるか","システム全体を最適化できているか"], correct:1 },
-      { cat:"NG行動", q:"初級DeveloperのNG行動に該当しないものはどれか。",
-        options:["自己判断で仕様変更する","レビュー指摘を無視する","不明点をすぐに質問し確認する","進捗を報告しない"], correct:2 },
-      { cat:"DoD", q:"初級DeveloperのDefinition of Doneに含まれないものはどれか。",
-        options:["レビューが承認されている","バグゼロ件である","技術課題リストが整理されている","指摘修正が完了している"], correct:2 },
-      { cat:"KPI", q:"初級DeveloperのKPIとして定義されているものはどれか。",
-        options:["技術起因障害率","バグ件数","見積誤差","顧客満足"], correct:1 },
-      { cat:"タスク（週次）", q:"初級Developerの週次タスクに該当するものはどれか。",
-        options:["設計レビュー主導","レビュー指摘対応","技術課題解決","KPI集計"], correct:1 },
-      { cat:"OUTPUT", q:"初級DeveloperのOUTPUTとして定義されているものはどれか。",
-        options:["コードと単体テスト結果","アーキテクチャ設計書","障害分析レポート","テスト計画書"], correct:0 },
-      { cat:"タスク（月次）", q:"初級Developerの月次タスクに含まれるものはどれか。",
-        options:["技術戦略整理","スキル向上（学習）","教育計画の更新","品質メトリクスレビュー"], correct:1 },
-      { cat:"タスク（イベント）", q:"初級Developerのイベントタスクとして正しいものはどれか。",
-        options:["アーキ設計支援","設計説明会への参加","キックオフでのプロジェクト計画説明","障害分析主導"], correct:1 },
+      { cat:"役割理解", cat_vi:"Hiểu vai trò",
+        q:"職務定義書における、BrSEの役割概要として定義されているものはどれか。",
+        q_vi:"Theo tài liệu định nghĩa công việc, vai trò tổng quát của BrSE là gì?",
+        options:["技術意思決定者","顧客要求を正確に理解し、TTDで開発可能な仕様に変換する","品質保証責任者","QCDの最終責任者"],
+        options_vi:["Người ra quyết định kỹ thuật","Hiểu chính xác yêu cầu khách hàng và chuyển đổi thành đặc tả mà TTD có thể phát triển được","Người chịu trách nhiệm đảm bảo chất lượng","Người chịu trách nhiệm cuối cùng về QCD"],
+        correct:1 },
+      { cat:"最終意思決定", cat_vi:"Quyết định cuối cùng",
+        q:"職務定義書の最終意思決定ルールにおいて、BrSEが最終責任を持つ領域はどれか。",
+        q_vi:"Theo quy tắc quyết định cuối cùng trong tài liệu định nghĩa công việc, lĩnh vực nào BrSE chịu trách nhiệm cuối cùng?",
+        options:["要件","技術","品質","全体"],
+        options_vi:["Yêu cầu","Kỹ thuật","Chất lượng","Toàn thể"],
+        correct:0 },
+      { cat:"NG行動", cat_vi:"Hành vi cấm",
+        q:"BrSEのNG行動に該当しないものはどれか。",
+        q_vi:"Đâu KHÔNG phải là hành vi cấm đối với BrSE?",
+        options:["曖昧仕様のままTTDに渡す","TTDへの丸投げ","不明点をTTDに確認してから渡す","顧客の言葉をそのままTTDに転送する"],
+        options_vi:["Chuyển đặc tả còn mơ hồ cho TTD","Phó mặc hoàn toàn cho TTD","Xác nhận điểm chưa rõ với TTD trước khi giao việc","Chuyển nguyên văn lời khách hàng cho TTD"],
+        correct:2 },
+      { cat:"KPI", cat_vi:"KPI",
+        q:"BrSEのKPIとして定義されているものはどれか。",
+        q_vi:"Đâu là KPI của BrSE?",
+        options:["手戻り率","稼働率","見積誤差","重大障害数"],
+        options_vi:["Tỷ lệ làm lại (do đặc tả)","Tỷ lệ vận hành","Sai số ước tính","Số lượng sự cố nghiêm trọng"],
+        correct:0 },
+      { cat:"OUTPUT", cat_vi:"OUTPUT",
+        q:"BrSEのOUTPUTとして定義されているものはどれか。",
+        q_vi:"Đâu là OUTPUT của BrSE?",
+        options:["要件定義書とQ&A一覧","アーキテクチャ設計書","テスト計画書","品質分析レポート"],
+        options_vi:["Tài liệu định nghĩa yêu cầu và danh sách Hỏi & Đáp (Q&A)","Tài liệu thiết kế kiến trúc","Tài liệu kế hoạch kiểm thử","Báo cáo phân tích chất lượng"],
+        correct:0 },
+      { cat:"タスク（週次）", cat_vi:"Công việc (Hàng tuần)",
+        q:"BrSEの週次タスクに該当するものはどれか。",
+        q_vi:"Đâu là công việc hàng tuần của BrSE?",
+        options:["顧客定例への参加","評価面談","KPI集計","中級・初級Developerの育成"],
+        options_vi:["Tham gia họp định kỳ với khách hàng","Phỏng vấn đánh giá","Tổng hợp KPI","Đào tạo Lập trình viên Trung cấp và Sơ cấp"],
+        correct:0 },
+      { cat:"DoD", cat_vi:"DoD",
+        q:"BrSEのDefinition of Doneに含まれないものはどれか。",
+        q_vi:"Đâu KHÔNG nằm trong DoD của BrSE?",
+        options:["要件定義に重大な不明点がなくレビュー完了・承認済みである","TTDが実装に支障がないレベルで仕様を理解している","変更管理で影響範囲が整理され関係者合意済みである","技術選定の理由が明確である"],
+        options_vi:["Yêu cầu không còn điểm chưa rõ nghiêm trọng, đã review và phê duyệt","TTD hiểu đặc tả ở mức không gây trở ngại khi triển khai","Phạm vi ảnh hưởng đã được sắp xếp và các bên liên quan đã đồng thuận trong quản lý thay đổi","Lý do lựa chọn công nghệ đã rõ ràng"],
+        correct:3 },
+      { cat:"意思決定ルール", cat_vi:"Quy tắc quyết định",
+        q:"BrSEの意思決定ルールとして正しいものはどれか。",
+        q_vi:"Đâu là quy tắc quyết định đúng đối với BrSE?",
+        options:["要件定義時、TTDが迷わず設計に落とし込めるか","品質基準を満たしているか","リリースをGo/Stop判断できるか","予算内で完了しているか"],
+        options_vi:["Khi định nghĩa yêu cầu, TTD có thể triển khai thiết kế mà không bị vướng mắc không","Có đạt tiêu chuẩn chất lượng không","Có thể quyết định Go/Stop khi release không","Có hoàn thành trong phạm vi ngân sách không"],
+        correct:0 },
+    ]
+  },
+  dev_junior: {
+    label: "Developer（初級）", label_vi: "Lập trình viên (Sơ cấp)",
+    desc: "指示通り正確に実装する", desc_vi: "Thực hiện chính xác theo chỉ thị",
+    questions: [
+      { cat:"役割理解", cat_vi:"Hiểu vai trò",
+        q:"初級Developerの判断基準として、職務定義書に定められているものはどれか。",
+        q_vi:"Theo tài liệu định nghĩa công việc, tiêu chí đánh giá của Lập trình viên Sơ cấp là gì?",
+        options:["チーム全体の生産性を上げているか","指示通り正確に実装できているか","自身の考えで完結できるか","システム全体を最適化できているか"],
+        options_vi:["Có nâng cao năng suất của cả nhóm không","Có thực hiện chính xác theo chỉ thị không","Có thể tự hoàn thành theo suy nghĩ của bản thân không","Có tối ưu hóa được toàn bộ hệ thống không"],
+        correct:1 },
+      { cat:"NG行動", cat_vi:"Hành vi cấm",
+        q:"初級DeveloperのNG行動に該当しないものはどれか。",
+        q_vi:"Đâu KHÔNG phải là hành vi cấm đối với Lập trình viên Sơ cấp?",
+        options:["自己判断で仕様変更する","レビュー指摘を無視する","不明点をすぐに質問し確認する","進捗を報告しない"],
+        options_vi:["Tự ý thay đổi đặc tả theo phán đoán cá nhân","Bỏ qua các góp ý khi review","Ngay lập tức hỏi và xác nhận khi có điểm chưa rõ","Không báo cáo tiến độ"],
+        correct:2 },
+      { cat:"DoD", cat_vi:"DoD",
+        q:"初級DeveloperのDefinition of Doneに含まれないものはどれか。",
+        q_vi:"Đâu KHÔNG nằm trong Definition of Done (DoD) của Lập trình viên Sơ cấp?",
+        options:["レビューが承認されている","バグゼロ件である","技術課題リストが整理されている","指摘修正が完了している"],
+        options_vi:["Review đã được phê duyệt","Không còn lỗi (bug) nào","Danh sách vấn đề kỹ thuật đã được sắp xếp","Đã hoàn thành sửa các điểm được góp ý"],
+        correct:2 },
+      { cat:"KPI", cat_vi:"KPI",
+        q:"初級DeveloperのKPIとして定義されているものはどれか。",
+        q_vi:"Đâu là KPI được định nghĩa cho Lập trình viên Sơ cấp?",
+        options:["技術起因障害率","バグ件数","見積誤差","顧客満足"],
+        options_vi:["Tỷ lệ sự cố do nguyên nhân kỹ thuật","Số lượng lỗi (bug)","Sai số ước tính","Mức độ hài lòng của khách hàng"],
+        correct:1 },
+      { cat:"タスク（週次）", cat_vi:"Công việc (Hàng tuần)",
+        q:"初級Developerの週次タスクに該当するものはどれか。",
+        q_vi:"Đâu là công việc hàng tuần của Lập trình viên Sơ cấp?",
+        options:["設計レビュー主導","レビュー指摘対応","技術課題解決","KPI集計"],
+        options_vi:["Chủ trì review thiết kế","Xử lý các góp ý từ review","Giải quyết vấn đề kỹ thuật","Tổng hợp KPI"],
+        correct:1 },
+      { cat:"OUTPUT", cat_vi:"OUTPUT",
+        q:"初級DeveloperのOUTPUTとして定義されているものはどれか。",
+        q_vi:"Đâu là sản phẩm đầu ra (OUTPUT) được định nghĩa cho Lập trình viên Sơ cấp?",
+        options:["コードと単体テスト結果","アーキテクチャ設計書","障害分析レポート","テスト計画書"],
+        options_vi:["Mã nguồn (code) và kết quả unit test","Tài liệu thiết kế kiến trúc","Báo cáo phân tích sự cố","Tài liệu kế hoạch kiểm thử"],
+        correct:0 },
+      { cat:"タスク（月次）", cat_vi:"Công việc (Hàng tháng)",
+        q:"初級Developerの月次タスクに含まれるものはどれか。",
+        q_vi:"Đâu là công việc hàng tháng của Lập trình viên Sơ cấp?",
+        options:["技術戦略整理","スキル向上（学習）","教育計画の更新","品質メトリクスレビュー"],
+        options_vi:["Sắp xếp chiến lược kỹ thuật","Nâng cao kỹ năng (học tập)","Cập nhật kế hoạch đào tạo","Review các chỉ số chất lượng"],
+        correct:1 },
+      { cat:"タスク（イベント）", cat_vi:"Công việc (Sự kiện)",
+        q:"初級Developerのイベントタスクとして正しいものはどれか。",
+        q_vi:"Đâu là công việc theo sự kiện đúng với Lập trình viên Sơ cấp?",
+        options:["アーキ設計支援","設計説明会への参加","キックオフでのプロジェクト計画説明","障害分析主導"],
+        options_vi:["Hỗ trợ thiết kế kiến trúc","Tham gia buổi giải thích thiết kế","Giải thích kế hoạch dự án trong buổi kickoff","Chủ trì phân tích sự cố"],
+        correct:1 },
     ]
   },
   dev_mid: {
-    label: "Developer（中級）",
-    desc: "自力で機能単位を完結できる",
+    label: "Developer（中級）", label_vi: "Lập trình viên (Trung cấp)",
+    desc: "自力で機能単位を完結できる", desc_vi: "Có thể tự hoàn thành công việc ở cấp độ chức năng",
     questions: [
-      { cat:"役割理解", q:"中級Developerの判断基準として定義されているものはどれか。",
-        options:["指示通り正確に実装できているか","自力で機能単位を完結できるか","システム全体として最適か","チームを指導できているか"], correct:1 },
-      { cat:"NG行動", q:"中級DeveloperのNG行動に該当しないものはどれか。",
-        options:["設計を無視する","レビューを形骸化させる","課題をチームで共有する","品質を軽視する"], correct:2 },
-      { cat:"DoD", q:"中級DeveloperのDefinition of Doneに含まれないものはどれか。",
-        options:["設計を理解している","テストケースが網羅されている","技術選定の理由が明確である","品質基準をクリアしている"], correct:2 },
-      { cat:"OUTPUT", q:"中級DeveloperのOUTPUTに含まれるものはどれか。",
-        options:["設計書（モジュール・コンポーネント）","アーキテクチャ設計書","テスト計画書","品質レポート"], correct:0 },
-      { cat:"タスク（日次）", q:"中級Developerの日次タスクに含まれないものはどれか。",
-        options:["チケット確認","コードレビュー実施","品質メトリクスレビュー","障害対応"], correct:2 },
-      { cat:"KPI", q:"中級DeveloperのKPIとして定義されているものはどれか。",
-        options:["バグ再発率","納期遵守率","顧客満足","見積誤差"], correct:0 },
-      { cat:"タスク（イベント）", q:"中級Developerのイベントタスクとして正しいものはどれか。",
-        options:["アーキ設計","詳細設計","キックオフ","テスト方針設計"], correct:1 },
-      { cat:"タスク（月次）", q:"中級Developerの月次タスクに含まれるものはどれか。",
-        options:["品質改善提案","技術標準改善","組織課題の整理","評価面談"], correct:0 },
+      { cat:"役割理解", cat_vi:"Hiểu vai trò",
+        q:"中級Developerの判断基準として定義されているものはどれか。",
+        q_vi:"Tiêu chí đánh giá được định nghĩa cho Lập trình viên Trung cấp là gì?",
+        options:["指示通り正確に実装できているか","自力で機能単位を完結できるか","システム全体として最適か","チームを指導できているか"],
+        options_vi:["Có thực hiện chính xác theo chỉ thị không","Có thể tự mình hoàn thành ở cấp độ chức năng không","Có tối ưu cho toàn bộ hệ thống không","Có hướng dẫn được nhóm không"],
+        correct:1 },
+      { cat:"NG行動", cat_vi:"Hành vi cấm",
+        q:"中級DeveloperのNG行動に該当しないものはどれか。",
+        q_vi:"Đâu KHÔNG phải là hành vi cấm đối với Lập trình viên Trung cấp?",
+        options:["設計を無視する","レビューを形骸化させる","課題をチームで共有する","品質を軽視する"],
+        options_vi:["Bỏ qua thiết kế","Làm cho việc review trở nên hình thức","Chia sẻ vấn đề với cả nhóm","Xem nhẹ chất lượng"],
+        correct:2 },
+      { cat:"DoD", cat_vi:"DoD",
+        q:"中級DeveloperのDefinition of Doneに含まれないものはどれか。",
+        q_vi:"Đâu KHÔNG nằm trong DoD của Lập trình viên Trung cấp?",
+        options:["設計を理解している","テストケースが網羅されている","技術選定の理由が明確である","品質基準をクリアしている"],
+        options_vi:["Hiểu rõ thiết kế","Test case đã bao phủ đầy đủ","Lý do lựa chọn công nghệ rõ ràng","Đạt tiêu chuẩn chất lượng"],
+        correct:2 },
+      { cat:"OUTPUT", cat_vi:"OUTPUT",
+        q:"中級DeveloperのOUTPUTに含まれるものはどれか。",
+        q_vi:"Đâu nằm trong OUTPUT của Lập trình viên Trung cấp?",
+        options:["設計書（モジュール・コンポーネント）","アーキテクチャ設計書","テスト計画書","品質レポート"],
+        options_vi:["Tài liệu thiết kế (module/component)","Tài liệu thiết kế kiến trúc","Tài liệu kế hoạch kiểm thử","Báo cáo chất lượng"],
+        correct:0 },
+      { cat:"タスク（日次）", cat_vi:"Công việc (Hàng ngày)",
+        q:"中級Developerの日次タスクに含まれないものはどれか。",
+        q_vi:"Đâu KHÔNG nằm trong công việc hàng ngày của Lập trình viên Trung cấp?",
+        options:["チケット確認","コードレビュー実施","品質メトリクスレビュー","障害対応"],
+        options_vi:["Kiểm tra ticket","Thực hiện code review","Review các chỉ số chất lượng","Xử lý sự cố"],
+        correct:2 },
+      { cat:"KPI", cat_vi:"KPI",
+        q:"中級DeveloperのKPIとして定義されているものはどれか。",
+        q_vi:"Đâu là KPI của Lập trình viên Trung cấp?",
+        options:["バグ再発率","納期遵守率","顧客満足","見積誤差"],
+        options_vi:["Tỷ lệ lỗi tái diễn","Tỷ lệ tuân thủ hạn giao","Mức độ hài lòng của khách hàng","Sai số ước tính"],
+        correct:0 },
+      { cat:"タスク（イベント）", cat_vi:"Công việc (Sự kiện)",
+        q:"中級Developerのイベントタスクとして正しいものはどれか。",
+        q_vi:"Đâu là công việc theo sự kiện đúng với Lập trình viên Trung cấp?",
+        options:["アーキ設計","詳細設計","キックオフ","テスト方針設計"],
+        options_vi:["Thiết kế kiến trúc","Thiết kế chi tiết","Kickoff","Thiết kế phương châm kiểm thử"],
+        correct:1 },
+      { cat:"タスク（月次）", cat_vi:"Công việc (Hàng tháng)",
+        q:"中級Developerの月次タスクに含まれるものはどれか。",
+        q_vi:"Đâu nằm trong công việc hàng tháng của Lập trình viên Trung cấp?",
+        options:["品質改善提案","技術標準改善","組織課題の整理","評価面談"],
+        options_vi:["Đề xuất cải thiện chất lượng","Cải thiện tiêu chuẩn kỹ thuật","Sắp xếp vấn đề tổ chức","Phỏng vấn đánh giá"],
+        correct:0 },
     ]
   },
   dev_senior: {
-    label: "Developer（上級）",
-    desc: "チーム全体の生産性・品質を良くする",
+    label: "Developer（上級）", label_vi: "Lập trình viên (Cao cấp)",
+    desc: "チーム全体の生産性・品質を良くする", desc_vi: "Nâng cao năng suất và chất lượng của cả nhóm",
     questions: [
-      { cat:"役割理解", q:"上級Developerの判断基準として定義されているものはどれか。",
-        options:["指示通り正しく作成する","自身の考えで作成する","チーム全体の生産性・品質を良くする","手順通り正確に実行する"], correct:2 },
-      { cat:"NG行動", q:"上級DeveloperのNG行動に該当しないものはどれか。",
-        options:["属人化させる","過度な自己流で進める","中級・初級Developerを育成する","チームを無視する"], correct:2 },
-      { cat:"DoD", q:"上級DeveloperのDefinition of Doneに含まれないものはどれか。",
-        options:["設計の妥当性が保たれている","再現性が確保されている","技術課題に優先順位付けがされている","品質が担保されている"], correct:2 },
-      { cat:"タスク（月次）", q:"上級Developerの月次タスクとして正しいものはどれか。",
-        options:["中級・初級Developerの育成","教育計画の更新","採用判断","品質メトリクスレビュー"], correct:0 },
-      { cat:"タスク（日次）", q:"上級Developerの日次タスクに含まれるものはどれか。",
-        options:["チケット確認","複雑機能実装","テストケース実行","稼働率確認"], correct:1 },
-      { cat:"KPI", q:"上級DeveloperのKPIとして定義されているものはどれか。",
-        options:["開発チーム生産性","見積誤差","手戻り率","テストカバレッジ"], correct:0 },
-      { cat:"タスク（イベント）", q:"上級Developerのイベントタスクとして正しいものはどれか。",
-        options:["障害の根本解決","キックオフ支援","UAT観点定義","リリース判断"], correct:0 },
-      { cat:"OUTPUT", q:"上級DeveloperのOUTPUTに含まれないものはどれか。",
-        options:["コード","技術資料","品質レポート","改善提案"], correct:2 },
+      { cat:"役割理解", cat_vi:"Hiểu vai trò",
+        q:"上級Developerの判断基準として定義されているものはどれか。",
+        q_vi:"Tiêu chí đánh giá của Lập trình viên Cao cấp là gì?",
+        options:["指示通り正しく作成する","自身の考えで作成する","チーム全体の生産性・品質を良くする","手順通り正確に実行する"],
+        options_vi:["Tạo ra đúng theo chỉ thị","Tạo ra theo suy nghĩ của bản thân","Nâng cao năng suất và chất lượng của cả nhóm","Thực hiện chính xác theo quy trình"],
+        correct:2 },
+      { cat:"NG行動", cat_vi:"Hành vi cấm",
+        q:"上級DeveloperのNG行動に該当しないものはどれか。",
+        q_vi:"Đâu KHÔNG phải là hành vi cấm đối với Lập trình viên Cao cấp?",
+        options:["属人化させる","過度な自己流で進める","中級・初級Developerを育成する","チームを無視する"],
+        options_vi:["Làm cho công việc phụ thuộc vào cá nhân","Làm theo cách riêng quá mức","Đào tạo Lập trình viên Trung cấp và Sơ cấp","Bỏ qua nhóm"],
+        correct:2 },
+      { cat:"DoD", cat_vi:"DoD",
+        q:"上級DeveloperのDefinition of Doneに含まれないものはどれか。",
+        q_vi:"Đâu KHÔNG nằm trong DoD của Lập trình viên Cao cấp?",
+        options:["設計の妥当性が保たれている","再現性が確保されている","技術課題に優先順位付けがされている","品質が担保されている"],
+        options_vi:["Tính hợp lý của thiết kế được đảm bảo","Tính tái lập được đảm bảo","Vấn đề kỹ thuật đã được sắp xếp thứ tự ưu tiên","Chất lượng được đảm bảo"],
+        correct:2 },
+      { cat:"タスク（月次）", cat_vi:"Công việc (Hàng tháng)",
+        q:"上級Developerの月次タスクとして正しいものはどれか。",
+        q_vi:"Đâu là công việc hàng tháng đúng với Lập trình viên Cao cấp?",
+        options:["中級・初級Developerの育成","教育計画の更新","採用判断","品質メトリクスレビュー"],
+        options_vi:["Đào tạo Lập trình viên Trung cấp và Sơ cấp","Cập nhật kế hoạch đào tạo","Quyết định tuyển dụng","Review các chỉ số chất lượng"],
+        correct:0 },
+      { cat:"タスク（日次）", cat_vi:"Công việc (Hàng ngày)",
+        q:"上級Developerの日次タスクに含まれるものはどれか。",
+        q_vi:"Đâu nằm trong công việc hàng ngày của Lập trình viên Cao cấp?",
+        options:["チケット確認","複雑機能実装","テストケース実行","稼働率確認"],
+        options_vi:["Kiểm tra ticket","Triển khai chức năng phức tạp","Thực thi test case","Kiểm tra tỷ lệ vận hành"],
+        correct:1 },
+      { cat:"KPI", cat_vi:"KPI",
+        q:"上級DeveloperのKPIとして定義されているものはどれか。",
+        q_vi:"Đâu là KPI của Lập trình viên Cao cấp?",
+        options:["開発チーム生産性","見積誤差","手戻り率","テストカバレッジ"],
+        options_vi:["Năng suất của nhóm phát triển","Sai số ước tính","Tỷ lệ làm lại","Độ bao phủ kiểm thử"],
+        correct:0 },
+      { cat:"タスク（イベント）", cat_vi:"Công việc (Sự kiện)",
+        q:"上級Developerのイベントタスクとして正しいものはどれか。",
+        q_vi:"Đâu là công việc theo sự kiện đúng với Lập trình viên Cao cấp?",
+        options:["障害の根本解決","キックオフ支援","UAT観点定義","リリース判断"],
+        options_vi:["Giải quyết tận gốc sự cố","Hỗ trợ kickoff","Định nghĩa góc nhìn UAT","Quyết định release"],
+        correct:0 },
+      { cat:"OUTPUT", cat_vi:"OUTPUT",
+        q:"上級DeveloperのOUTPUTに含まれないものはどれか。",
+        q_vi:"Đâu KHÔNG nằm trong OUTPUT của Lập trình viên Cao cấp?",
+        options:["コード","技術資料","品質レポート","改善提案"],
+        options_vi:["Mã nguồn (code)","Tài liệu kỹ thuật","Báo cáo chất lượng","Đề xuất cải tiến"],
+        correct:2 },
     ]
   },
   tester_junior: {
-    label: "Tester（初級）",
-    desc: "指示通りにテストする",
+    label: "Tester（初級）", label_vi: "Kiểm thử viên (Sơ cấp)",
+    desc: "指示通りにテストする", desc_vi: "Kiểm thử theo đúng chỉ thị",
     questions: [
-      { cat:"役割理解", q:"初級Testerの判断基準として定義されているものはどれか。",
-        options:["もれなく不具合を検出したか","手順通り正確に実行できているか","品質リスクを潰せているか","ユーザ影響を基準に判断できるか"], correct:1 },
-      { cat:"NG行動", q:"初級TesterのNG行動に該当しないものはどれか。",
-        options:["手順を無視する","再現確認をしない","再現確認を徹底する","曖昧なバグ報告をする"], correct:2 },
-      { cat:"DoD", q:"初級TesterのDefinition of Doneに含まれないものはどれか。",
-        options:["全ケースが実施済みである","結果が記録済みである","テスト観点が網羅済みである","再現確認済みである"], correct:2 },
-      { cat:"OUTPUT", q:"初級TesterのOUTPUTとして定義されているものはどれか。",
-        options:["テスト結果とバグ票","テストケースと改善したテスト観点","テスト方針書","品質分析レポート"], correct:0 },
-      { cat:"KPI", q:"初級TesterのKPIとして定義されているものはどれか。",
-        options:["テスト実行精度","バグ検出率","不具合流出率","テストカバレッジ"], correct:0 },
-      { cat:"タスク（週次）", q:"初級Testerの週次タスクに該当するものはどれか。",
-        options:["テスト観点レビュー","テスト進捗共有","品質状況レビュー","不具合分析"], correct:1 },
-      { cat:"タスク（月次）", q:"初級Testerの月次タスクに含まれるものはどれか。",
-        options:["不具合パターンの習得","品質分析","テストプロセス改善","不具合傾向分析"], correct:0 },
-      { cat:"タスク（イベント）", q:"初級Testerのイベントタスクとして正しいものはどれか。",
-        options:["テスト方針設計","テストケース設計","テスト実行","障害分析主導"], correct:2 },
+      { cat:"役割理解", cat_vi:"Hiểu vai trò",
+        q:"初級Testerの判断基準として定義されているものはどれか。",
+        q_vi:"Tiêu chí đánh giá của Kiểm thử viên Sơ cấp là gì?",
+        options:["もれなく不具合を検出したか","手順通り正確に実行できているか","品質リスクを潰せているか","ユーザ影響を基準に判断できるか"],
+        options_vi:["Có phát hiện lỗi đầy đủ, không bỏ sót không","Có thực hiện chính xác theo quy trình không","Có loại bỏ được rủi ro chất lượng không","Có thể phán đoán dựa trên mức độ ảnh hưởng tới người dùng không"],
+        correct:1 },
+      { cat:"NG行動", cat_vi:"Hành vi cấm",
+        q:"初級TesterのNG行動に該当しないものはどれか。",
+        q_vi:"Đâu KHÔNG phải là hành vi cấm đối với Kiểm thử viên Sơ cấp?",
+        options:["手順を無視する","再現確認をしない","再現確認を徹底する","曖昧なバグ報告をする"],
+        options_vi:["Bỏ qua quy trình","Không xác nhận tái hiện lỗi","Xác nhận tái hiện lỗi một cách triệt để","Báo cáo lỗi một cách mơ hồ"],
+        correct:2 },
+      { cat:"DoD", cat_vi:"DoD",
+        q:"初級TesterのDefinition of Doneに含まれないものはどれか。",
+        q_vi:"Đâu KHÔNG nằm trong DoD của Kiểm thử viên Sơ cấp?",
+        options:["全ケースが実施済みである","結果が記録済みである","テスト観点が網羅済みである","再現確認済みである"],
+        options_vi:["Tất cả các case đã được thực hiện","Kết quả đã được ghi lại","Các góc nhìn kiểm thử đã được bao phủ đầy đủ","Đã xác nhận tái hiện lỗi"],
+        correct:2 },
+      { cat:"OUTPUT", cat_vi:"OUTPUT",
+        q:"初級TesterのOUTPUTとして定義されているものはどれか。",
+        q_vi:"Đâu là OUTPUT của Kiểm thử viên Sơ cấp?",
+        options:["テスト結果とバグ票","テストケースと改善したテスト観点","テスト方針書","品質分析レポート"],
+        options_vi:["Kết quả kiểm thử và phiếu lỗi","Test case và các góc nhìn kiểm thử đã cải thiện","Tài liệu phương châm kiểm thử","Báo cáo phân tích chất lượng"],
+        correct:0 },
+      { cat:"KPI", cat_vi:"KPI",
+        q:"初級TesterのKPIとして定義されているものはどれか。",
+        q_vi:"Đâu là KPI của Kiểm thử viên Sơ cấp?",
+        options:["テスト実行精度","バグ検出率","不具合流出率","テストカバレッジ"],
+        options_vi:["Độ chính xác khi thực thi kiểm thử","Tỷ lệ phát hiện lỗi","Tỷ lệ lỗi lọt ra ngoài","Độ bao phủ kiểm thử"],
+        correct:0 },
+      { cat:"タスク（週次）", cat_vi:"Công việc (Hàng tuần)",
+        q:"初級Testerの週次タスクに該当するものはどれか。",
+        q_vi:"Đâu là công việc hàng tuần của Kiểm thử viên Sơ cấp?",
+        options:["テスト観点レビュー","テスト進捗共有","品質状況レビュー","不具合分析"],
+        options_vi:["Review góc nhìn kiểm thử","Chia sẻ tiến độ kiểm thử","Review tình trạng chất lượng","Phân tích lỗi"],
+        correct:1 },
+      { cat:"タスク（月次）", cat_vi:"Công việc (Hàng tháng)",
+        q:"初級Testerの月次タスクに含まれるものはどれか。",
+        q_vi:"Đâu nằm trong công việc hàng tháng của Kiểm thử viên Sơ cấp?",
+        options:["不具合パターンの習得","品質分析","テストプロセス改善","不具合傾向分析"],
+        options_vi:["Nắm vững các mẫu lỗi","Phân tích chất lượng","Cải thiện quy trình kiểm thử","Phân tích xu hướng lỗi"],
+        correct:0 },
+      { cat:"タスク（イベント）", cat_vi:"Công việc (Sự kiện)",
+        q:"初級Testerのイベントタスクとして正しいものはどれか。",
+        q_vi:"Đâu là công việc theo sự kiện đúng với Kiểm thử viên Sơ cấp?",
+        options:["テスト方針設計","テストケース設計","テスト実行","障害分析主導"],
+        options_vi:["Thiết kế phương châm kiểm thử","Thiết kế test case","Thực thi kiểm thử","Chủ trì phân tích sự cố"],
+        correct:2 },
     ]
   },
   tester_mid: {
-    label: "Tester（中級）",
-    desc: "自分でテスト観点を増やす",
+    label: "Tester（中級）", label_vi: "Kiểm thử viên (Trung cấp)",
+    desc: "自分でテスト観点を増やす", desc_vi: "Tự mình bổ sung thêm góc nhìn kiểm thử",
     questions: [
-      { cat:"役割理解", q:"中級Testerの判断基準として定義されているものはどれか。",
-        options:["手順通り正確に実行できているか","重要な不具合を漏らさず検出できるか","品質リスクをコントロールできているか","チームを指導できているか"], correct:1 },
-      { cat:"NG行動", q:"中級TesterのNG行動に該当しないものはどれか。",
-        options:["テスト観点が不足する","再現性が不十分である","影響範囲を考慮して分析する","影響範囲を考慮しない"], correct:2 },
-      { cat:"DoD", q:"中級TesterのDefinition of Doneに含まれないものはどれか。",
-        options:["テスト観点が網羅済みである","優先度が適切に設定されている","品質改善施策が実行済みである","再現性が担保されている"], correct:2 },
-      { cat:"OUTPUT", q:"中級TesterのOUTPUTとして定義されているものはどれか。",
-        options:["テストケースと改善したテスト観点","テスト結果とバグ票","品質分析レポート","テスト方針書"], correct:0 },
-      { cat:"タスク（日次）", q:"中級Testerの日次タスクに含まれるものはどれか。",
-        options:["テスト結果記録","バグ分析","品質リスク評価","重障害分析"], correct:1 },
-      { cat:"KPI", q:"中級TesterのKPIとして定義されているものはどれか。",
-        options:["テスト観点追加数","テスト実行精度","不具合流出率","テストカバレッジ"], correct:0 },
-      { cat:"タスク（イベント）", q:"中級Testerのイベントタスクとして正しいものはどれか。",
-        options:["テスト方針設計","テストケース設計","テスト実行","品質判定支援"], correct:1 },
-      { cat:"タスク（月次）", q:"中級Testerの月次タスクに含まれるものはどれか。",
-        options:["品質改善提案","テストプロセス改善","再発防止策策定","品質メトリクスレビュー"], correct:0 },
+      { cat:"役割理解", cat_vi:"Hiểu vai trò",
+        q:"中級Testerの判断基準として定義されているものはどれか。",
+        q_vi:"Tiêu chí đánh giá của Kiểm thử viên Trung cấp là gì?",
+        options:["手順通り正確に実行できているか","重要な不具合を漏らさず検出できるか","品質リスクをコントロールできているか","チームを指導できているか"],
+        options_vi:["Có thực hiện chính xác theo quy trình không","Có phát hiện được các lỗi quan trọng, không bỏ sót không","Có kiểm soát được rủi ro chất lượng không","Có hướng dẫn được nhóm không"],
+        correct:1 },
+      { cat:"NG行動", cat_vi:"Hành vi cấm",
+        q:"中級TesterのNG行動に該当しないものはどれか。",
+        q_vi:"Đâu KHÔNG phải là hành vi cấm đối với Kiểm thử viên Trung cấp?",
+        options:["テスト観点が不足する","再現性が不十分である","影響範囲を考慮して分析する","影響範囲を考慮しない"],
+        options_vi:["Thiếu góc nhìn kiểm thử","Tính tái lập không đầy đủ","Phân tích có xem xét phạm vi ảnh hưởng","Không xem xét phạm vi ảnh hưởng"],
+        correct:2 },
+      { cat:"DoD", cat_vi:"DoD",
+        q:"中級TesterのDefinition of Doneに含まれないものはどれか。",
+        q_vi:"Đâu KHÔNG nằm trong DoD của Kiểm thử viên Trung cấp?",
+        options:["テスト観点が網羅済みである","優先度が適切に設定されている","品質改善施策が実行済みである","再現性が担保されている"],
+        options_vi:["Các góc nhìn kiểm thử đã được bao phủ đầy đủ","Mức độ ưu tiên đã được thiết lập phù hợp","Biện pháp cải thiện chất lượng đã được thực hiện","Tính tái lập được đảm bảo"],
+        correct:2 },
+      { cat:"OUTPUT", cat_vi:"OUTPUT",
+        q:"中級TesterのOUTPUTとして定義されているものはどれか。",
+        q_vi:"Đâu là OUTPUT của Kiểm thử viên Trung cấp?",
+        options:["テストケースと改善したテスト観点","テスト結果とバグ票","品質分析レポート","テスト方針書"],
+        options_vi:["Test case và các góc nhìn kiểm thử đã cải thiện","Kết quả kiểm thử và phiếu lỗi","Báo cáo phân tích chất lượng","Tài liệu phương châm kiểm thử"],
+        correct:0 },
+      { cat:"タスク（日次）", cat_vi:"Công việc (Hàng ngày)",
+        q:"中級Testerの日次タスクに含まれるものはどれか。",
+        q_vi:"Đâu nằm trong công việc hàng ngày của Kiểm thử viên Trung cấp?",
+        options:["テスト結果記録","バグ分析","品質リスク評価","重障害分析"],
+        options_vi:["Ghi lại kết quả kiểm thử","Phân tích lỗi","Đánh giá rủi ro chất lượng","Phân tích sự cố nghiêm trọng"],
+        correct:1 },
+      { cat:"KPI", cat_vi:"KPI",
+        q:"中級TesterのKPIとして定義されているものはどれか。",
+        q_vi:"Đâu là KPI của Kiểm thử viên Trung cấp?",
+        options:["テスト観点追加数","テスト実行精度","不具合流出率","テストカバレッジ"],
+        options_vi:["Số lượng góc nhìn kiểm thử được bổ sung","Độ chính xác khi thực thi kiểm thử","Tỷ lệ lỗi lọt ra ngoài","Độ bao phủ kiểm thử"],
+        correct:0 },
+      { cat:"タスク（イベント）", cat_vi:"Công việc (Sự kiện)",
+        q:"中級Testerのイベントタスクとして正しいものはどれか。",
+        q_vi:"Đâu là công việc theo sự kiện đúng với Kiểm thử viên Trung cấp?",
+        options:["テスト方針設計","テストケース設計","テスト実行","品質判定支援"],
+        options_vi:["Thiết kế phương châm kiểm thử","Thiết kế test case","Thực thi kiểm thử","Hỗ trợ đánh giá chất lượng"],
+        correct:1 },
+      { cat:"タスク（月次）", cat_vi:"Công việc (Hàng tháng)",
+        q:"中級Testerの月次タスクに含まれるものはどれか。",
+        q_vi:"Đâu nằm trong công việc hàng tháng của Kiểm thử viên Trung cấp?",
+        options:["品質改善提案","テストプロセス改善","再発防止策策定","品質メトリクスレビュー"],
+        options_vi:["Đề xuất cải thiện chất lượng","Cải thiện quy trình kiểm thử","Xây dựng biện pháp phòng ngừa tái diễn","Review các chỉ số chất lượng"],
+        correct:0 },
     ]
   },
   tester_senior: {
-    label: "Tester（上級）",
-    desc: "品質リスクをコントロールする",
+    label: "Tester（上級）", label_vi: "Kiểm thử viên (Cao cấp)",
+    desc: "品質リスクをコントロールする", desc_vi: "Kiểm soát rủi ro chất lượng",
     questions: [
-      { cat:"役割理解", q:"上級Testerの判断基準として定義されているものはどれか。",
-        options:["指示通りにテストする","自分でテスト観点を増やす","品質リスクをコントロールする","手順通り正確に実行する"], correct:2 },
-      { cat:"NG行動", q:"上級TesterのNG行動に該当しないものはどれか。",
-        options:["品質判断を曖昧にする","重要なリスクを見逃す","チームを指導し標準化する","属人化させる"], correct:2 },
-      { cat:"DoD", q:"上級TesterのDefinition of Doneに含まれないものはどれか。",
-        options:["品質リスクが明確になっている","再発防止策が策定済みである","全ケースが実施済みである","品質改善施策が実行済みである"], correct:2 },
-      { cat:"OUTPUT", q:"上級TesterのOUTPUTとして定義されているものはどれか。",
-        options:["テスト方針書","テストケース","バグ票","テスト結果"], correct:0 },
-      { cat:"タスク（イベント）", q:"上級Testerのイベントタスクとして正しいものはどれか。",
-        options:["テストケース設計","テスト方針設計","テスト実行","レビュー主導"], correct:1 },
-      { cat:"KPI", q:"上級TesterのKPIとして定義されているものはどれか。",
-        options:["品質改善数","バグ検出率","テスト観点追加数","実行完了率"], correct:0 },
-      { cat:"タスク（週次）", q:"上級Testerの週次タスクに該当するものはどれか。",
-        options:["テスト進捗共有","品質状況レビュー","テストケース見直し","レビュー指摘対応"], correct:1 },
-      { cat:"タスク（月次）", q:"上級Testerの月次タスクに含まれるものはどれか。",
-        options:["品質分析","不具合パターン習得","不具合傾向分析","テスト観点強化"], correct:0 },
+      { cat:"役割理解", cat_vi:"Hiểu vai trò",
+        q:"上級Testerの判断基準として定義されているものはどれか。",
+        q_vi:"Tiêu chí đánh giá của Kiểm thử viên Cao cấp là gì?",
+        options:["指示通りにテストする","自分でテスト観点を増やす","品質リスクをコントロールする","手順通り正確に実行する"],
+        options_vi:["Kiểm thử theo đúng chỉ thị","Tự mình bổ sung thêm góc nhìn kiểm thử","Kiểm soát rủi ro chất lượng","Thực hiện chính xác theo quy trình"],
+        correct:2 },
+      { cat:"NG行動", cat_vi:"Hành vi cấm",
+        q:"上級TesterのNG行動に該当しないものはどれか。",
+        q_vi:"Đâu KHÔNG phải là hành vi cấm đối với Kiểm thử viên Cao cấp?",
+        options:["品質判断を曖昧にする","重要なリスクを見逃す","チームを指導し標準化する","属人化させる"],
+        options_vi:["Làm cho việc đánh giá chất lượng trở nên mơ hồ","Bỏ sót rủi ro quan trọng","Hướng dẫn nhóm và chuẩn hóa quy trình","Làm cho công việc phụ thuộc vào cá nhân"],
+        correct:2 },
+      { cat:"DoD", cat_vi:"DoD",
+        q:"上級TesterのDefinition of Doneに含まれないものはどれか。",
+        q_vi:"Đâu KHÔNG nằm trong DoD của Kiểm thử viên Cao cấp?",
+        options:["品質リスクが明確になっている","再発防止策が策定済みである","全ケースが実施済みである","品質改善施策が実行済みである"],
+        options_vi:["Rủi ro chất lượng đã được làm rõ","Biện pháp phòng ngừa tái diễn đã được xây dựng","Tất cả các case đã được thực hiện","Biện pháp cải thiện chất lượng đã được thực hiện"],
+        correct:2 },
+      { cat:"OUTPUT", cat_vi:"OUTPUT",
+        q:"上級TesterのOUTPUTとして定義されているものはどれか。",
+        q_vi:"Đâu là OUTPUT của Kiểm thử viên Cao cấp?",
+        options:["テスト方針書","テストケース","バグ票","テスト結果"],
+        options_vi:["Tài liệu phương châm kiểm thử","Test case","Phiếu lỗi","Kết quả kiểm thử"],
+        correct:0 },
+      { cat:"タスク（イベント）", cat_vi:"Công việc (Sự kiện)",
+        q:"上級Testerのイベントタスクとして正しいものはどれか。",
+        q_vi:"Đâu là công việc theo sự kiện đúng với Kiểm thử viên Cao cấp?",
+        options:["テストケース設計","テスト方針設計","テスト実行","レビュー主導"],
+        options_vi:["Thiết kế test case","Thiết kế phương châm kiểm thử","Thực thi kiểm thử","Chủ trì review"],
+        correct:1 },
+      { cat:"KPI", cat_vi:"KPI",
+        q:"上級TesterのKPIとして定義されているものはどれか。",
+        q_vi:"Đâu là KPI của Kiểm thử viên Cao cấp?",
+        options:["品質改善数","バグ検出率","テスト観点追加数","実行完了率"],
+        options_vi:["Số lượng cải thiện chất lượng","Tỷ lệ phát hiện lỗi","Số lượng góc nhìn kiểm thử được bổ sung","Tỷ lệ hoàn thành thực thi"],
+        correct:0 },
+      { cat:"タスク（週次）", cat_vi:"Công việc (Hàng tuần)",
+        q:"上級Testerの週次タスクに該当するものはどれか。",
+        q_vi:"Đâu là công việc hàng tuần của Kiểm thử viên Cao cấp?",
+        options:["テスト進捗共有","品質状況レビュー","テストケース見直し","レビュー指摘対応"],
+        options_vi:["Chia sẻ tiến độ kiểm thử","Review tình trạng chất lượng","Xem xét lại test case","Xử lý các góp ý từ review"],
+        correct:1 },
+      { cat:"タスク（月次）", cat_vi:"Công việc (Hàng tháng)",
+        q:"上級Testerの月次タスクに含まれるものはどれか。",
+        q_vi:"Đâu nằm trong công việc hàng tháng của Kiểm thử viên Cao cấp?",
+        options:["品質分析","不具合パターン習得","不具合傾向分析","テスト観点強化"],
+        options_vi:["Phân tích chất lượng","Nắm vững các mẫu lỗi","Phân tích xu hướng lỗi","Tăng cường góc nhìn kiểm thử"],
+        correct:0 },
     ]
   },
   pm: {
-    label: "Project Manager",
-    desc: "QCDの最終責任者",
+    label: "Project Manager", label_vi: "Quản lý dự án (PM)",
+    desc: "QCDの最終責任者", desc_vi: "Người chịu trách nhiệm cuối cùng về QCD",
     questions: [
-      { cat:"役割理解", q:"職務定義書における、PMの役割概要として定義されているものはどれか。",
-        options:["技術意思決定者","QCDの最終責任者","品質保証責任者","拠点の事業・品質・人材を統括"], correct:1 },
-      { cat:"RACI", q:"基本RACI表において、PMが「A（説明責任者）」を担わない領域はどれか。",
-        options:["要件管理","画面設計","品質保証","リリース判断"], correct:1 },
-      { cat:"NG行動", q:"PMのNG行動に該当しないものはどれか。",
-        options:["進捗を感覚で判断する","遅延を隠蔽する","課題管理リストを常に更新する","リスク対応を後回しにする"], correct:2 },
-      { cat:"DoD", q:"PMのDefinition of Doneに含まれないものはどれか。",
-        options:["プロジェクト計画がスコープ・WBS・スケジュール・体制・リスクで定義・承認済みである","全課題に対応方針と期限が設定済みである","技術課題の優先順位付け・対応方針が決定されている","QAと合意しリリース可能状態になっている"], correct:2 },
-      { cat:"KPI", q:"PMのKPIとして定義されていないものはどれか。",
-        options:["納期厳守率（基準95%以上）","見積誤差（±10%以内）","稼働率（80%以上）","変更管理率"], correct:2 },
-      { cat:"最終意思決定", q:"職務定義書の最終意思決定ルールにおいて、PMが最終責任を持つ領域はどれか。",
-        options:["要件","技術","品質","全体"], correct:3 },
-      { cat:"タスク（週次）", q:"PMの週次タスクに含まれるものはどれか。",
-        options:["予算消化状況の確認","KPI分析","見積もり精度改善","プロジェクト計画の作成"], correct:0 },
-      { cat:"運用ルール", q:"職務定義書に定められた例外時の運用ルールとして正しいものはどれか。",
-        options:["仕様が曖昧な場合でも納期優先で実装を進める","仕様が曖昧な場合は実装をStopし、BrSEに確認する","緊急時は役割分担を柔軟に変更してよい","品質問題発生時はPMの判断を優先する"], correct:1 },
+      { cat:"役割理解", cat_vi:"Hiểu vai trò",
+        q:"職務定義書における、PMの役割概要として定義されているものはどれか。",
+        q_vi:"Theo tài liệu định nghĩa công việc, vai trò tổng quát của PM là gì?",
+        options:["技術意思決定者","QCDの最終責任者","品質保証責任者","拠点の事業・品質・人材を統括"],
+        options_vi:["Người ra quyết định kỹ thuật","Người chịu trách nhiệm cuối cùng về QCD","Người chịu trách nhiệm đảm bảo chất lượng","Quản lý tổng thể kinh doanh, chất lượng, nhân sự của chi nhánh"],
+        correct:1 },
+      { cat:"RACI", cat_vi:"RACI",
+        q:"基本RACI表において、PMが「A（説明責任者）」を担わない領域はどれか。",
+        q_vi:"Trong bảng RACI cơ bản, lĩnh vực nào PM KHÔNG đảm nhận vai trò 'A (người chịu trách nhiệm giải trình)'?",
+        options:["要件管理","画面設計","品質保証","リリース判断"],
+        options_vi:["Quản lý yêu cầu","Thiết kế màn hình","Đảm bảo chất lượng","Quyết định release"],
+        correct:1 },
+      { cat:"NG行動", cat_vi:"Hành vi cấm",
+        q:"PMのNG行動に該当しないものはどれか。",
+        q_vi:"Đâu KHÔNG phải là hành vi cấm đối với PM?",
+        options:["進捗を感覚で判断する","遅延を隠蔽する","課題管理リストを常に更新する","リスク対応を後回しにする"],
+        options_vi:["Đánh giá tiến độ theo cảm tính","Che giấu sự chậm trễ","Luôn cập nhật danh sách quản lý vấn đề","Trì hoãn việc xử lý rủi ro"],
+        correct:2 },
+      { cat:"DoD", cat_vi:"DoD",
+        q:"PMのDefinition of Doneに含まれないものはどれか。",
+        q_vi:"Đâu KHÔNG nằm trong DoD của PM?",
+        options:["プロジェクト計画がスコープ・WBS・スケジュール・体制・リスクで定義・承認済みである","全課題に対応方針と期限が設定済みである","技術課題の優先順位付け・対応方針が決定されている","QAと合意しリリース可能状態になっている"],
+        options_vi:["Kế hoạch dự án (scope, WBS, lịch trình, cơ cấu, rủi ro) đã được định nghĩa và phê duyệt","Tất cả các vấn đề đã có phương hướng xử lý và hạn chót","Thứ tự ưu tiên và phương hướng xử lý vấn đề kỹ thuật đã được quyết định","Đã thống nhất với QA và ở trạng thái có thể release"],
+        correct:2 },
+      { cat:"KPI", cat_vi:"KPI",
+        q:"PMのKPIとして定義されていないものはどれか。",
+        q_vi:"Đâu KHÔNG được định nghĩa là KPI của PM?",
+        options:["納期厳守率（基準95%以上）","見積誤差（±10%以内）","稼働率（80%以上）","変更管理率"],
+        options_vi:["Tỷ lệ tuân thủ nghiêm ngặt hạn giao (tiêu chuẩn từ 95% trở lên)","Sai số ước tính (trong phạm vi ±10%)","Tỷ lệ vận hành (từ 80% trở lên)","Tỷ lệ quản lý thay đổi"],
+        correct:2 },
+      { cat:"最終意思決定", cat_vi:"Quyết định cuối cùng",
+        q:"職務定義書の最終意思決定ルールにおいて、PMが最終責任を持つ領域はどれか。",
+        q_vi:"Theo quy tắc quyết định cuối cùng trong tài liệu định nghĩa công việc, lĩnh vực nào PM chịu trách nhiệm cuối cùng?",
+        options:["要件","技術","品質","全体"],
+        options_vi:["Yêu cầu","Kỹ thuật","Chất lượng","Toàn thể"],
+        correct:3 },
+      { cat:"タスク（週次）", cat_vi:"Công việc (Hàng tuần)",
+        q:"PMの週次タスクに含まれるものはどれか。",
+        q_vi:"Đâu nằm trong công việc hàng tuần của PM?",
+        options:["予算消化状況の確認","KPI分析","見積もり精度改善","プロジェクト計画の作成"],
+        options_vi:["Kiểm tra tình hình sử dụng ngân sách","Phân tích KPI","Cải thiện độ chính xác ước tính","Lập kế hoạch dự án"],
+        correct:0 },
+      { cat:"運用ルール", cat_vi:"Quy tắc vận hành",
+        q:"職務定義書に定められた例外時の運用ルールとして正しいものはどれか。",
+        q_vi:"Đâu là quy tắc vận hành trong trường hợp ngoại lệ được quy định trong tài liệu định nghĩa công việc?",
+        options:["仕様が曖昧な場合でも納期優先で実装を進める","仕様が曖昧な場合は実装をStopし、BrSEに確認する","緊急時は役割分担を柔軟に変更してよい","品質問題発生時はPMの判断を優先する"],
+        options_vi:["Ngay cả khi đặc tả chưa rõ ràng, vẫn ưu tiên hạn giao để tiếp tục triển khai","Nếu đặc tả chưa rõ ràng, dừng việc triển khai và xác nhận với BrSE","Trong tình huống khẩn cấp, có thể linh hoạt thay đổi phân công vai trò","Khi xảy ra vấn đề chất lượng, ưu tiên phán đoán của PM"],
+        correct:1 },
     ]
   }
 };
@@ -700,7 +1010,7 @@ let state = {
   name: "",
   roleKey: null,
   index: 0,
-  answers: [], // {selected, correct}
+  answers: [],
   formSubmitted: false
 };
 
@@ -730,37 +1040,78 @@ const scorePercent = document.getElementById('score-percent');
 const scoreTier = document.getElementById('score-tier');
 const reviewList = document.getElementById('review-list');
 const btnRetry = document.getElementById('btn-retry');
-const btnMail = document.getElementById('btn-mail');
-const mailPanel = document.getElementById('mail-panel');
-const mpTo = document.getElementById('mp-to');
-const mpSubject = document.getElementById('mp-subject');
-const mpBody = document.getElementById('mp-body');
-const btnOpenMail = document.getElementById('btn-open-mail');
-const btnCopyBody = document.getElementById('btn-copy-body');
-const copyMsg = document.getElementById('copy-msg');
-document.getElementById('footnote-addr').textContent = TEAM_LEADER_EMAIL;
+const btnSave = document.getElementById('btn-save');
+const saveStatus = document.getElementById('save-status');
+
+const langJaBtn = document.getElementById('lang-ja');
+const langViBtn = document.getElementById('lang-vi');
+
+/* ============================================================
+   静的テキストの適用
+   ============================================================ */
+function applyStaticText() {
+  const t = UI[currentLang];
+  document.getElementById('lh-mark').textContent = t.mark;
+  document.getElementById('lh-rev').textContent = t.rev;
+  document.getElementById('txt-title').textContent = t.title;
+  document.getElementById('txt-subtitle').textContent = t.subtitle;
+  document.getElementById('txt-name-label').textContent = t.nameLabel;
+  inputName.placeholder = t.namePlaceholder;
+  errorName.textContent = t.errorName;
+  document.getElementById('txt-role-label').textContent = t.roleLabel;
+  errorRole.textContent = t.errorRole;
+  btnStart.textContent = t.btnStart;
+
+  document.getElementById('txt-result-title').textContent = t.resultTitle;
+  btnRetry.textContent = t.btnRetry;
+  btnSave.textContent = t.btnSave;
+
+  langJaBtn.classList.toggle('active', currentLang === 'ja');
+  langViBtn.classList.toggle('active', currentLang === 'vi');
+}
+
+function setLang(lang) {
+  currentLang = lang;
+  applyStaticText();
+  buildRoleGrid();
+  if (!screenQuiz.classList.contains('hidden') && state.roleKey) {
+    progressRole.textContent = currentLang === 'ja' ? QUIZ_DATA[state.roleKey].label : QUIZ_DATA[state.roleKey].label_vi;
+    renderQuestion();
+  }
+  if (!screenResult.classList.contains('hidden')) {
+    showResult();
+  }
+}
+
+langJaBtn.addEventListener('click', () => setLang('ja'));
+langViBtn.addEventListener('click', () => setLang('vi'));
 
 /* ============================================================
    ロール選択カードの生成
    ============================================================ */
-Object.keys(QUIZ_DATA).forEach(key => {
-  const role = QUIZ_DATA[key];
-  const div = document.createElement('label');
-  div.className = 'role-option';
-  div.dataset.key = key;
-  div.innerHTML = `
-    <input type="radio" name="role" value="${key}">
-    <div class="r-name">${role.label}</div>
-    <div class="r-desc">${role.desc}</div>
-  `;
-  div.addEventListener('click', () => {
-    document.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
-    div.classList.add('selected');
-    state.roleKey = key;
-    errorRole.style.display = 'none';
+function buildRoleGrid() {
+  roleGrid.innerHTML = '';
+  Object.keys(QUIZ_DATA).forEach(key => {
+    const role = QUIZ_DATA[key];
+    const div = document.createElement('label');
+    div.className = 'role-option' + (state.roleKey === key ? ' selected' : '');
+    div.dataset.key = key;
+    const label = currentLang === 'ja' ? role.label : role.label_vi;
+    const desc = currentLang === 'ja' ? role.desc : role.desc_vi;
+    div.innerHTML = `
+      <input type="radio" name="role" value="${key}">
+      <div class="r-name">${label}</div>
+      <div class="r-desc">${desc}</div>
+    `;
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
+      div.classList.add('selected');
+      state.roleKey = key;
+      errorRole.style.display = 'none';
+    });
+    roleGrid.appendChild(div);
   });
-  roleGrid.appendChild(div);
-});
+}
 
 /* ============================================================
    開始ボタン
@@ -775,10 +1126,11 @@ btnStart.addEventListener('click', () => {
   state.name = name;
   state.index = 0;
   state.answers = [];
+  state.formSubmitted = false;
 
   screenStart.classList.add('hidden');
   screenQuiz.classList.remove('hidden');
-  progressRole.textContent = QUIZ_DATA[state.roleKey].label;
+  progressRole.textContent = currentLang === 'ja' ? QUIZ_DATA[state.roleKey].label : QUIZ_DATA[state.roleKey].label_vi;
   renderQuestion();
 });
 
@@ -791,19 +1143,21 @@ function renderQuestion() {
   selectedOption = null;
   btnNext.disabled = true;
 
+  const t = UI[currentLang];
   const role = QUIZ_DATA[state.roleKey];
   const total = role.questions.length;
   const q = role.questions[state.index];
 
-  progressLabel.textContent = `Q${state.index + 1} / ${total}`;
+  progressLabel.textContent = t.progress(state.index + 1, total);
   progressFill.style.width = `${(state.index / total) * 100}%`;
 
-  qTag.textContent = q.cat;
-  qText.textContent = q.q;
+  qTag.textContent = currentLang === 'ja' ? q.cat : q.cat_vi;
+  qText.textContent = currentLang === 'ja' ? q.q : q.q_vi;
   qOptions.innerHTML = '';
 
   const letters = ['A', 'B', 'C', 'D'];
-  q.options.forEach((opt, i) => {
+  const opts = currentLang === 'ja' ? q.options : q.options_vi;
+  opts.forEach((opt, i) => {
     const div = document.createElement('div');
     div.className = 'option';
     div.innerHTML = `<span class="letter">${letters[i]}</span><span>${opt}</span>`;
@@ -816,7 +1170,7 @@ function renderQuestion() {
     qOptions.appendChild(div);
   });
 
-  btnNext.textContent = (state.index === total - 1) ? '結果を見る' : '次へ';
+  btnNext.textContent = (state.index === total - 1) ? t.seeResult : t.next;
 }
 
 btnNext.addEventListener('click', () => {
@@ -843,31 +1197,36 @@ btnNext.addEventListener('click', () => {
 function showResult() {
   screenQuiz.classList.add('hidden');
   screenResult.classList.remove('hidden');
+  saveStatus.className = 'save-status';
+  saveStatus.textContent = '';
 
+  const t = UI[currentLang];
   const role = QUIZ_DATA[state.roleKey];
   const total = role.questions.length;
   const correctCount = state.answers.filter(a => a.isCorrect).length;
   const percent = Math.round((correctCount / total) * 100);
 
   scoreNumber.innerHTML = `${correctCount}<span>/${total}</span>`;
-  scorePercent.textContent = `正答率 ${percent}%`;
+  scorePercent.textContent = t.percentLabel(percent);
 
   scoreTier.innerHTML = '';
   const tierSpan = document.createElement('span');
   tierSpan.className = 'score-tier ' + (percent >= 75 ? 'tier-pass' : 'tier-review');
-  tierSpan.textContent = percent >= 75 ? '合格ライン到達' : '要復習';
+  tierSpan.textContent = percent >= 75 ? t.tierPass : t.tierReview;
   scoreTier.appendChild(tierSpan);
 
   const letters = ['A', 'B', 'C', 'D'];
   reviewList.innerHTML = '';
   role.questions.forEach((q, i) => {
     const a = state.answers[i];
+    const qLabel = currentLang === 'ja' ? q.q : q.q_vi;
+    const opts = currentLang === 'ja' ? q.options : q.options_vi;
     const div = document.createElement('div');
     div.className = 'review-item';
     div.innerHTML = `
-      <div class="rq">Q${i + 1}. ${q.q}</div>
-      <div class="review-row"><span class="rl">回答</span><span class="${a.isCorrect ? 'badge-correct' : 'badge-wrong'}">${letters[a.selected]}. ${q.options[a.selected]}　${a.isCorrect ? '（正解）' : '（不正解）'}</span></div>
-      ${a.isCorrect ? '' : `<div class="review-row"><span class="rl">正解</span><span class="badge-correct">${letters[q.correct]}. ${q.options[q.correct]}</span></div>`}
+      <div class="rq">Q${i + 1}. ${qLabel}</div>
+      <div class="review-row"><span class="rl">${t.answerLabel}</span><span class="${a.isCorrect ? 'badge-correct' : 'badge-wrong'}">${letters[a.selected]}. ${opts[a.selected]}　${a.isCorrect ? t.correctTag : t.wrongTag}</span></div>
+      ${a.isCorrect ? '' : `<div class="review-row"><span class="rl">${t.correctLabel}</span><span class="badge-correct">${letters[q.correct]}. ${opts[q.correct]}</span></div>`}
     `;
     reviewList.appendChild(div);
   });
@@ -878,17 +1237,17 @@ function showResult() {
    ============================================================ */
 btnRetry.addEventListener('click', () => {
   state = { name: state.name, roleKey: null, index: 0, answers: [], formSubmitted: false };
-  document.querySelectorAll('.role-option').forEach(el => el.classList.remove('selected'));
-  mailPanel.classList.add('hidden');
   screenResult.classList.add('hidden');
   screenStart.classList.remove('hidden');
+  buildRoleGrid();
 });
 
 /* ============================================================
-   メール報告（下書き表示 → コピー or メールソフト起動）
+   結果を保存
    ============================================================ */
-function buildMailContent() {
+function buildFormFields() {
   const role = QUIZ_DATA[state.roleKey];
+  const roleLabel = currentLang === 'ja' ? role.label : role.label_vi;
   const total = role.questions.length;
   const correctCount = state.answers.filter(a => a.isCorrect).length;
   const percent = Math.round((correctCount / total) * 100);
@@ -899,83 +1258,47 @@ function buildMailContent() {
   let detail = '';
   role.questions.forEach((q, i) => {
     const a = state.answers[i];
-    detail += `Q${i + 1}（${q.cat}）: ${a.isCorrect ? '正解' : '不正解'}${a.isCorrect ? '' : `　※回答:${letters[a.selected]} 正解:${letters[q.correct]}`}\n`;
+    const cat = currentLang === 'ja' ? q.cat : q.cat_vi;
+    const line = currentLang === 'ja'
+      ? `Q${i + 1}（${cat}）: ${a.isCorrect ? '正解' : '不正解'}${a.isCorrect ? '' : `　※回答:${letters[a.selected]} 正解:${letters[q.correct]}`}`
+      : `Câu ${i + 1} (${cat}): ${a.isCorrect ? 'Đúng' : 'Sai'}${a.isCorrect ? '' : `　*Bạn chọn: ${letters[a.selected]} - Đáp án đúng: ${letters[q.correct]}`}`;
+    detail += line + '\n';
   });
 
-  const subject = `【職務定義書 理解度テスト】${state.name}さん（${role.label}）の結果`;
-  const body =
-`職務定義書 理解度テスト 受験結果
-
-氏名　　：${state.name}
-職種　　：${role.label}
-受験日時：${dateStr}
-得点　　：${correctCount} / ${total}（正答率 ${percent}%）
-
-―― 設問別結果 ――
-${detail}
-以上、ご確認をお願いいたします。`;
-
   return {
-    subject,
-    body,
-    formFields: {
-      name: state.name,
-      role: role.label,
-      score: `${correctCount}/${total}`,
-      percent: `${percent}%`,
-      datetime: dateStr,
-      detail: detail.trim()
-    }
+    name: state.name,
+    role: roleLabel,
+    score: `${correctCount}/${total}`,
+    percent: `${percent}%`,
+    datetime: dateStr,
+    detail: detail.trim()
   };
 }
 
-btnMail.addEventListener('click', () => {
-  const { subject, body, formFields } = buildMailContent();
-  mpTo.value = TEAM_LEADER_EMAIL;
-  mpSubject.value = subject;
-  mpBody.value = body;
-  copyMsg.style.display = 'none';
-  mailPanel.classList.remove('hidden');
-  mailPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+btnSave.addEventListener('click', () => {
+  if (state.formSubmitted) return;
 
-  // 同じ結果を何度も記録しないよう、1回の受験につき1回だけGoogleフォームへ送信する
-  if (!state.formSubmitted) {
-    submitToGoogleForm(formFields);
-    state.formSubmitted = true;
-  }
+  const t = UI[currentLang];
+  saveStatus.className = 'save-status saving';
+  saveStatus.textContent = t.saving;
+  btnSave.disabled = true;
+
+  const fields = buildFormFields();
+  submitToGoogleForm(fields)
+    .catch(() => {})
+    .finally(() => {
+      state.formSubmitted = true;
+      saveStatus.className = 'save-status ok';
+      saveStatus.textContent = t.saved;
+      btnSave.disabled = false;
+    });
 });
 
-btnOpenMail.addEventListener('click', () => {
-  const mailtoUrl = `mailto:${TEAM_LEADER_EMAIL}?subject=${encodeURIComponent(mpSubject.value)}&body=${encodeURIComponent(mpBody.value)}`;
-  // アンカー要素経由でクリックする方式は location.href への直接代入より
-  // サンドボックス環境でブロックされにくい
-  const a = document.createElement('a');
-  a.href = mailtoUrl;
-  a.style.display = 'none';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-});
-
-btnCopyBody.addEventListener('click', async () => {
-  const text = `宛先：${mpTo.value}\n件名：${mpSubject.value}\n\n${mpBody.value}`;
-  try {
-    await navigator.clipboard.writeText(text);
-    copyMsg.style.display = 'block';
-  } catch (e) {
-    // clipboard APIが使えない環境向けフォールバック
-    mpBody.focus();
-    mpBody.select();
-    try {
-      document.execCommand('copy');
-      copyMsg.style.display = 'block';
-    } catch (e2) {
-      copyMsg.textContent = 'コピーに失敗しました。本文欄を選択して手動でコピーしてください。';
-      copyMsg.style.color = 'var(--red)';
-      copyMsg.style.display = 'block';
-    }
-  }
-});
+/* ============================================================
+   初期化
+   ============================================================ */
+applyStaticText();
+buildRoleGrid();
 </script>
 </body>
 </html>
